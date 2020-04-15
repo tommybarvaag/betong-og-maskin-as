@@ -1,0 +1,11 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# macOS files
+.DS_Store
+
+# dependencies
+/node_modules
+/yarn.lock
+
+# santity
+/dist

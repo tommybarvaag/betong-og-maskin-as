@@ -1,0 +1,16 @@
+# macOS files
+.DS_Store
+
+# dependencies
+/node_modules
+
+# lerna
+/lerna-debug.log
+
+# now
+.now
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

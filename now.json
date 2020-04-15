@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "name": "betong-og-maskin-as",
+  "env": {
+    "SANITY_PROJECT_ID": "@sanity-project-id",
+    "SEND_GRID_SEND_MAIL_API_KEY": "@send-grid-api-key"
+  },
+  "build": {
+    "env": {
+      "SANITY_PROJECT_ID": "@sanity-project-id",
+      "SEND_GRID_SEND_MAIL_API_KEY": "@send-grid-api-key"
+    }
+  },
+  "builds": [
+    {
+      "src": "web/package.json",
+      "use": "@now/next",
+      "config": { "distDir": "public" }
+    },
+    {
+      "src": "studio/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
+  "routes": [
+    { "src": "^/studio/static/(.*)", "dest": "/studio/static/$1" },
+    { "src": "^/studio/(.*)", "dest": "/studio/index.html" },
+    {
+      "src": "/(.*)",
+      "dest": "/web/$1"
+    }
+  ],
+  "alias": ["betong-og-maskin-as.now.sh"]
+}
