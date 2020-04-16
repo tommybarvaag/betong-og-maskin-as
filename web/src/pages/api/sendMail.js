@@ -6,7 +6,7 @@ export default async (req, res) => {
     res.end();
   }
 
-  const apiKey = process.env.SEND_GRID_SEND_MAIL_API_KEY;
+  const apiKey = process.env.BOM_SEND_GRID_SEND_MAIL_API_KEY;
   if (!apiKey) {
     res.statusCode = 500;
     res.end("No Send Grid API Key");

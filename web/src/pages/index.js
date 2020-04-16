@@ -11,9 +11,6 @@ import { getHome } from "../lib/sanity/api";
 const settings = {
   rootLink: {
     name: "Betong & Maskin AS",
-    target: null,
-    type: 0,
-    udi: null,
     url: "/"
   },
   culture: "",
@@ -24,54 +21,29 @@ const settings = {
       level: 2,
       link: {
         name: "Om oss",
-        target: null,
-        type: 0,
-        udi: null,
         url: "/om-oss/"
       },
       children: null
     },
     {
-      name: "Vår kompetanse",
-      url: "/var-kompetanse/",
-      level: 2,
-      link: {
-        name: "Vår kompetanse",
-        target: null,
-        type: 0,
-        udi: null,
-        url: "/var-kompetanse/"
-      },
-      children: null
-    },
-    {
       name: "Kontakt oss",
-      url: "/kontakt-oss/",
+      url: "/kontakt/",
       level: 2,
       link: {
         name: "Kontakt oss",
-        target: null,
-        type: 0,
-        udi: null,
-        url: "/kontakt-oss/"
+        url: "/kontakt/"
       },
       children: null
     }
   ],
   footerLinks: [
     {
-      name: "Prosjekter",
-      target: null,
-      type: 0,
-      udi: "umb://document/9ed3b04e59b1455d9981d26006edb179",
-      url: "/prosjekter/"
+      name: "Om oss",
+      url: "/om-oss/"
     },
     {
-      name: "Referanser",
-      target: null,
-      type: 0,
-      udi: "umb://document/ca2a8e7a8cfc49df96f997fe5021233f",
-      url: "/referanser/"
+      name: "Kontakt",
+      url: "/kontakt/"
     }
   ],
   socialMediaItems: [
@@ -117,10 +89,10 @@ export default function Home(props) {
     <>
       <Head>
         <title lang="en">{page?.title}</title>
-        <meta name="description" content={page?.text}></meta>
+        <meta name="description" content={page?.metaDescription ?? "Meta desc"}></meta>
         <link rel="canonical" href="/"></link>
         <meta property="og:title" content={page?.title}></meta>
-        <meta property="og:description" content={page?.text}></meta>
+        <meta property="og:description" content={page?.metaDescription ?? "Meta desc"}></meta>
         <meta property="og:url" content="/"></meta>
         <meta property="og:type" content="website"></meta>
         <meta property="og:image" content="/logo.jpg"></meta>

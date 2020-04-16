@@ -4,27 +4,32 @@ import React from "react";
 export default function GoogleMap(props) {
   const { latitude, longitude } = props;
 
+  const googleMapsApiKey = process.env.BOM_GOOGLE_MAPS_API_KEY;
+
   return (
-    <LoadScript id="script-loader" googleMapsApiKey="AIzaSyDNW8nEbulglaNUQriXZRgZR0C-lBGEJSc">
-      <ReactGoogleMap
-        id="bom-map"
-        mapContainerStyle={{
-          height: "600px",
-          width: "100%"
-        }}
-        zoom={14}
-        center={{
-          lat: latitude,
-          lng: longitude
-        }}
-      >
-        <Marker
-          position={{
+    googleMapsApiKey !== null &&
+    googleMapsApiKey !== undefined && (
+      <LoadScript id="script-loader" googleMapsApiKey={googleMapsApiKey}>
+        <ReactGoogleMap
+          id="bom-map"
+          mapContainerStyle={{
+            height: "600px",
+            width: "100%"
+          }}
+          zoom={14}
+          center={{
             lat: latitude,
             lng: longitude
           }}
-        />
-      </ReactGoogleMap>
-    </LoadScript>
+        >
+          <Marker
+            position={{
+              lat: latitude,
+              lng: longitude
+            }}
+          />
+        </ReactGoogleMap>
+      </LoadScript>
+    )
   );
 }

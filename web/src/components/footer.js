@@ -51,7 +51,7 @@ export default function Footer(props) {
   }
 
   function renderGoogleMaps() {
-    if (props?.showGoogleMaps ?? false) {
+    if (true) {
       return <GoogleMap latitude={settings?.latitude} longitude={settings?.longitude} />;
     }
 
