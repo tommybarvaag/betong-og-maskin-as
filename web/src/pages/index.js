@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Home(props) {
-  const { page, info, services } = props;
+  const { page, settings, info, services } = props;
   const classes = useStyles();
 
   function renderServices() {
@@ -38,7 +38,7 @@ export default function Home(props) {
   }
 
   return (
-    <Layout page={page} info={info}>
+    <Layout page={page} settings={settings} info={info}>
       {renderServices()}
     </Layout>
   );

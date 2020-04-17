@@ -7,7 +7,7 @@ import Nav from "./nav";
 import Parallax from "./parallax";
 
 export default function Layout(props) {
-  const { page, info, children } = props;
+  const { page, settings, info, children } = props;
 
   return (
     <>
@@ -43,7 +43,7 @@ export default function Layout(props) {
             },
             "sameAs": ["https://www.facebook.com/betongogmaskin","https://www.linkedin.com/in/betongogmaskin/"]`}</script>
       </Head>
-      <Nav info={info} />
+      <Nav page={page} settings={settings} info={info} />
       <Hero title={page?.title} text={page?.text} image={page?.image} />
       {children}
       <Parallax
@@ -71,7 +71,7 @@ export default function Layout(props) {
           </div>
         </div>
       </Parallax>
-      <Footer page={page} info={info} />
+      <Footer page={page} settings={settings} info={info} />
     </>
   );
 }

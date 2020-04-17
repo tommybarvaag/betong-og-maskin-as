@@ -132,7 +132,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Nav(props) {
-  const { info } = props;
+  const { settings, info } = props;
   const classes = useStyles();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -142,6 +142,8 @@ export default function Nav(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  console.log(settings);
 
   const address = `${info?.address1}, ${info?.zipCode} ${info?.city}`;
 
@@ -193,17 +195,17 @@ export default function Nav(props) {
         <Toolbar className={classes.toolbarMenuAndSearch}>
           <Container className={classes.toolbarContainer}>
             <nav className={classes.toolbarMenu}>
-              {info?.menuItems &&
-                info?.menuItems.length > 0 &&
-                info?.menuItems.map((menuItem, index) => (
+              {settings?.menu &&
+                settings?.menu.length > 0 &&
+                settings?.menu.map((menuItem, index) => (
                   <Link
                     key={`menu-item-${index}`}
                     className={classes.menuLink}
-                    href={menuItem.link?.url}
+                    href={menuItem.slug?.current}
                     variant="button"
                     color="textPrimary"
                   >
-                    {menuItem.name}
+                    {menuItem.title}
                   </Link>
                 ))}
             </nav>
@@ -247,18 +249,18 @@ export default function Nav(props) {
             </div>
             <Divider key={"swipeable-divider-1"} />
             <List key={"swipeable-toolbar-menu-list"}>
-              {info?.menuItems &&
-                info?.menuItems.length > 0 &&
-                info?.menuItems.map((menuItem, index) => (
+              {settings?.menu &&
+                settings?.menu.length > 0 &&
+                settings?.menu.map((menuItem, index) => (
                   <ListItem
                     component={Link}
-                    href={menuItem.link?.url}
+                    href={menuItem.slug?.current}
                     onClick={handleDrawerToggle}
                     key={index}
                   >
                     <ListItemText
                       className={classes.swipeableDrawerListItemText}
-                      primary={menuItem.name}
+                      primary={menuItem.title}
                     />
                   </ListItem>
                 ))}

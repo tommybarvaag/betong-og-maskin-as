@@ -4,10 +4,10 @@ import Layout from "../components/layout";
 import { getPage } from "../lib/sanity/api";
 
 export default function About(props) {
-  const { page, info } = props;
+  const { page, settings, info } = props;
 
   return (
-    <Layout page={page} info={info}>
+    <Layout page={page} settings={settings} info={info}>
       <Container>About</Container>
     </Layout>
   );

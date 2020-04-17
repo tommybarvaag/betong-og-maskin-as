@@ -31,7 +31,11 @@ export async function getPage(pageName, preview = false) {
   const data = await getClient(preview).fetch(`{
       "settings": *[_type == "siteSettings"]{
       description,
-      keywords
+      keywords,
+      menu[]->{
+        title,
+        slug
+      }
     }|[0],
       "info": *[_type == "companyInfo"]{
         name,
