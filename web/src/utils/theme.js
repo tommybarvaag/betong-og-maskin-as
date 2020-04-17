@@ -3,7 +3,7 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 // Create a theme instance.
 const theme = createMuiTheme({
   typography: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: ['"Helvetica Neue"', "Arial", "sans-serif"].join(","),
     h1: {
       fontSize: "4.8rem"
@@ -22,7 +22,7 @@ const theme = createMuiTheme({
     }
   },
   palette: {
-    common: { black: "rgb(38, 50, 56)", white: "rgb(236, 239, 241)" },
+    common: { black: "rgb(38, 50, 56)", white: "rgb(249, 249, 249)" },
     background: { paper: "rgb(255, 255, 255)", default: "rgb(255, 255, 255)" },
     primary: {
       light: "rgb(207, 216, 220)",

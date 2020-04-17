@@ -1,4 +1,9 @@
 import { MdBuild } from "react-icons/md";
+import speakingurl from "speakingurl";
+
+function getSlug(value, options = { truncate: 200, symbols: true }) {
+  return value ? speakingurl(value, options) : "";
+}
 
 export default {
   name: "service",
@@ -18,7 +23,7 @@ export default {
       description: "Some frontend will require a slug to be set to be able to show the post",
       options: {
         source: "title",
-        maxLength: 96
+        slugify: input => `tjenester/${getSlug(input)}`
       }
     },
     {

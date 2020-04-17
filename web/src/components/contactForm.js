@@ -1,6 +1,7 @@
 import { Button, Container, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -13,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center"
   },
   contactForm: {
-    margin: "0 auto"
+    margin: `${theme.spacing(5)}px auto`
   },
   textField: {
     width: "100%"
@@ -21,21 +22,32 @@ const useStyles = makeStyles(theme => ({
   button: {
     textTransform: "none",
     margin: theme.spacing(2, 0, 0)
+  },
+  reCaptcha: {
+    margin: theme.spacing(2, 0, 1)
+  },
+  reCaptchaText: {
+    height: "28px",
+    marginBottom: 0
   }
 }));
 
 export default function ContactForm() {
   const classes = useStyles();
 
+  const recaptchaRef = React.createRef();
+
   const [submitting, setSubmitting] = React.useState(false);
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [text, setText] = React.useState("");
+  const [captchaText, setCaptchaText] = React.useState("");
 
   const [nameValid, setNameValid] = React.useState(true);
   const [emailValid, setEmailValid] = React.useState(true);
   const [textValid, setTextValid] = React.useState(true);
+  const [captchaValid, setCaptchaValid] = React.useState(true);
 
   const validateString = (input, setFunc) => {
     const result = input !== null && input !== undefined && input !== "";
@@ -59,12 +71,28 @@ export default function ContactForm() {
     return result;
   };
 
+  const validateReCaptcha = (input, setFunc) => {
+    const result = !!input;
+
+    if (setFunc) {
+      setFunc(result);
+    }
+
+    return result;
+  };
+
   const onFormSubmit = () => {
     const nameValidationResult = validateString(name, setNameValid);
     const emailValidationResult = validateEmail(email, setEmailValid);
     const textValidationResult = validateString(text, setTextValid);
+    const reCaptchaValidationResult = validateReCaptcha(captchaText, setCaptchaValid);
 
-    if (nameValidationResult && emailValidationResult && textValidationResult) {
+    if (
+      nameValidationResult &&
+      emailValidationResult &&
+      textValidationResult &&
+      reCaptchaValidationResult
+    ) {
       setSubmitting(true);
       fetch("/api/sendMail", {
         method: "POST",
@@ -81,6 +109,11 @@ export default function ContactForm() {
         })
       });
     }
+  };
+
+  const onCaptchaChange = value => {
+    setCaptchaText(value);
+    validateReCaptcha(value, setCaptchaValid);
   };
 
   const renderContactFormContent = () => {
@@ -150,6 +183,16 @@ export default function ContactForm() {
                 validateString(text, setTextValid);
               }}
             />
+            <div className={classes.reCaptcha}>
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey="6Lf6OskUAAAAAAd-Xyzd6uwQX3BdE3PVIzsVFTuU"
+                onChange={onCaptchaChange}
+              />
+            </div>
+            <Typography className={classes.reCaptchaText} color="error" paragraph>
+              {!captchaValid && "Du må krysse av i boksen *"}
+            </Typography>
             <Button
               variant="contained"
               color="primary"

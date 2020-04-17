@@ -27,7 +27,7 @@ const getClient = preview => (preview ? previewClient : client);
 
 export const imageBuilder = sanityImage(client);
 
-export async function getHome(preview = false) {
+export async function getPage(pageName, preview = false) {
   const data = await getClient(preview).fetch(`{
       "settings": *[_type == "siteSettings"]{
       description,
@@ -41,28 +41,27 @@ export async function getHome(preview = false) {
         email,
         name,
         phone,
-        zipCode
+        zipCode,
+        googleMapsLatitude,
+        googleMapsLongitude,
+        googleMapsZoom,
+        socialMedias
       }|[0],
       "services": *[_type == "service"]{
         title,
         text,
         slug {
-        current
-      },
-        mainImage {
-          asset,
-          alt
+          current
         },
+        mainImage,
         categories
       },
-      "page": *[_id == "home"]{
+      "page": *[_id == "${pageName}"]{
         title,
-        image {
-          asset,
-          alt
-        },
-      text,
-      enableContactForm
+        image,
+        text,
+        enableContactForm,
+        enableGoogleMaps
       }|[0]
     }`);
 

@@ -6,21 +6,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import React from "react";
-import Link from "./link";
+import ConditionalWrapper from "./conditionalWrapper";
 import Image from "./image";
+import Link from "./link";
 
 const useStyles = makeStyles(theme => ({
   card: {}
 }));
 
 export default function ContentCard(props) {
-  const { title, text, image, link } = props;
+  const { title, text, image, href } = props;
   const classes = useStyles();
 
   return (
     <Card className={classes.card}>
-      <Link link={link}>
-        <Image alt={image?.alt} url={image?.asset} />
+      <ConditionalWrapper
+        condition={href !== null && href !== undefined}
+        wrapper={children => <Link href={href}>{children}</Link>}
+      >
+        <Image image={image} width={400} height={500} fit="crop" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {title}
@@ -30,13 +34,13 @@ export default function ContentCard(props) {
           </Typography>
         </CardContent>
         <CardActions>
-          {link && link.url && (
+          {href !== null && href !== undefined && (
             <Button variant="text" size="medium" color="primary">
               Les mer
             </Button>
           )}
         </CardActions>
-      </Link>
+      </ConditionalWrapper>
     </Card>
   );
 }

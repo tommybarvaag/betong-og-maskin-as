@@ -1,7 +1,10 @@
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { Facebook } from "@material-ui/icons";
+import Facebook from "@material-ui/icons/Facebook";
+import LinkedIn from "@material-ui/icons/LinkedIn";
+import Twitter from "@material-ui/icons/Twitter";
+import GitHub from "@material-ui/icons/GitHub";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
 import Copyright from "./copyright";
@@ -13,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   footer: {
     backgroundColor: theme.palette.bomColors.black,
     color: theme.palette.bomColors.yellow,
-    marginTop: props => (props?.showGoogleMaps ? 0 : theme.spacing(8)),
+    marginTop: props => (props?.page?.enableGoogleMaps ? 0 : theme.spacing(8)),
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     [theme.breakpoints.up("sm")]: {
@@ -34,16 +37,19 @@ const useStyles = makeStyles(theme => ({
   footerIcon: {
     color: theme.palette.common.white,
     fontSize: "2.4rem"
+  },
+  socialMedia: {
+    display: "flex"
   }
 }));
 
 export default function Footer(props) {
-  const { settings } = props;
+  const { page, info } = props;
 
-  const classes = useStyles();
+  const classes = useStyles(props);
 
   function renderContactForm() {
-    if (props?.showContactForm ?? false) {
+    if (page?.enableContactForm ?? false) {
       return <ContactForm />;
     }
 
@@ -51,11 +57,28 @@ export default function Footer(props) {
   }
 
   function renderGoogleMaps() {
-    if (true) {
-      return <GoogleMap latitude={settings?.latitude} longitude={settings?.longitude} />;
+    if (page?.enableGoogleMaps && info?.googleMapsLatitude && info?.googleMapsLongitude) {
+      return (
+        <GoogleMap latitude={info?.googleMapsLatitude} longitude={info?.googleMapsLongitude} />
+      );
     }
 
     return null;
+  }
+
+  function renderSocialMediaIcon(socialMedia) {
+    switch (socialMedia.type) {
+      case "Facebook":
+        return <Facebook className={classes.footerIcon} />;
+      case "Twitter":
+        return <Twitter className={classes.footerIcon} />;
+      case "LinkedIn":
+        return <LinkedIn className={classes.footerIcon} />;
+      case "GitHub":
+        return <GitHub className={classes.footerIcon} />;
+      default:
+        return <Facebook className={classes.footerIcon} />;
+    }
   }
 
   return (
@@ -84,13 +107,13 @@ export default function Footer(props) {
                 Linker
               </Typography>
               <ul>
-                {settings &&
-                  settings?.footerLinks &&
-                  settings?.footerLinks.map((footerLink, index) => (
+                {info &&
+                  info?.footerLinks &&
+                  info?.footerLinks.map((footerLink, index) => (
                     <li key={footerLink.name}>
                       <Link
                         className={classes.footerLink}
-                        href={footerLink?.url ?? "/"}
+                        href={info?.url ?? "/"}
                         variant="subtitle1"
                         color="textSecondary"
                       >
@@ -104,17 +127,17 @@ export default function Footer(props) {
               <Typography className={classes.gridHeader} variant="h6" gutterBottom>
                 Følg oss
               </Typography>
-              <ul>
-                {settings &&
-                  settings?.socialMediaItems &&
-                  settings?.socialMediaItems.map((socialMediaItem, index) => (
-                    <li key={socialMediaItem.icon}>
+              <ul className={classes.socialMedia}>
+                {info &&
+                  info?.socialMedias &&
+                  info?.socialMedias.map((socialMedia, index) => (
+                    <li key={socialMedia.type}>
                       <a
                         className={classes.footerLink}
-                        href={socialMediaItem.link?.url ?? "/"}
+                        href={socialMedia?.url ?? "/"}
                         variant="subtitle1"
                       >
-                        <Facebook className={classes.footerIcon} />
+                        {renderSocialMediaIcon(socialMedia)}
                       </a>
                     </li>
                   ))}

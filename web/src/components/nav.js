@@ -132,7 +132,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Nav(props) {
-  const { settings } = props;
+  const { info } = props;
   const classes = useStyles();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -143,7 +143,7 @@ export default function Nav(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  const address = `${settings?.address}, ${settings?.zipCode} ${settings?.city}`;
+  const address = `${info?.address1}, ${info?.zipCode} ${info?.city}`;
 
   return (
     <AppBar position="static" elevation={0} className={classes.appBar}>
@@ -152,7 +152,7 @@ export default function Nav(props) {
           <Container className={classes.toolbarContainer}>
             <Link
               className={classes.toolbarTitle}
-              href={settings?.rootLink?.url}
+              href="/"
               variant="subtitle1"
               color="textSecondary"
             >
@@ -160,23 +160,23 @@ export default function Nav(props) {
             </Link>
             <List className={classes.contact}>
               <ListItem className={classes.listItem}>
-                <a className={classes.listItemLink} href={`tel:${settings?.phone}`}>
+                <a className={classes.listItemLink} href={`tel:${info?.phone}`}>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
                       <Phone />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Ring oss" secondary={settings?.phone} />
+                  <ListItemText primary="Ring oss" secondary={info?.phone} />
                 </a>
               </ListItem>
               <ListItem className={classes.listItem}>
-                <a className={classes.listItemLink} href={`mailto:${settings?.email}`}>
+                <a className={classes.listItemLink} href={`mailto:${info?.email}`}>
                   <ListItemAvatar>
                     <Avatar className={classes.avatar}>
                       <Email />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Send oss en e-post" secondary={settings?.email} />
+                  <ListItemText primary="Send oss en e-post" secondary={info?.email} />
                 </a>
               </ListItem>
               <ListItem className={classes.listItem}>
@@ -193,9 +193,9 @@ export default function Nav(props) {
         <Toolbar className={classes.toolbarMenuAndSearch}>
           <Container className={classes.toolbarContainer}>
             <nav className={classes.toolbarMenu}>
-              {settings?.menuItems &&
-                settings?.menuItems.length > 0 &&
-                settings?.menuItems.map((menuItem, index) => (
+              {info?.menuItems &&
+                info?.menuItems.length > 0 &&
+                info?.menuItems.map((menuItem, index) => (
                   <Link
                     key={`menu-item-${index}`}
                     className={classes.menuLink}
@@ -213,12 +213,12 @@ export default function Nav(props) {
       </Hidden>
       <Hidden smUp>
         <Toolbar disableGutters>
-          <Button href={`tel:${settings?.phone}`}>
+          <Button href={`tel:${info?.phone}`}>
             <Phone />
           </Button>
           <Link
             className={classes.toolbarPhoneLogo}
-            href={settings?.rootLink?.url}
+            href={"/"}
             variant="subtitle1"
             color="textSecondary"
           >
@@ -247,9 +247,9 @@ export default function Nav(props) {
             </div>
             <Divider key={"swipeable-divider-1"} />
             <List key={"swipeable-toolbar-menu-list"}>
-              {settings?.menuItems &&
-                settings?.menuItems.length > 0 &&
-                settings?.menuItems.map((menuItem, index) => (
+              {info?.menuItems &&
+                info?.menuItems.length > 0 &&
+                info?.menuItems.map((menuItem, index) => (
                   <ListItem
                     component={Link}
                     href={menuItem.link?.url}
@@ -267,25 +267,25 @@ export default function Nav(props) {
             <List key={"swipeable-toolbar-actions"}>
               <ListItem
                 component="a"
-                href={`tel:${settings?.phone}`}
+                href={`tel:${info?.phone}`}
                 button
                 key={"swipeable-drawer-phone"}
               >
                 <ListItemIcon className={classes.swipeableDrawerListItemIcon}>
                   <Phone />
                 </ListItemIcon>
-                <ListItemText primary={settings?.phone} />
+                <ListItemText primary={info?.phone} />
               </ListItem>
               <ListItem
                 component="a"
-                href={`mailto:${settings?.email}`}
+                href={`mailto:${info?.email}`}
                 button
                 key={"swipeable-drawer-email"}
               >
                 <ListItemIcon className={classes.swipeableDrawerListItemIcon}>
                   <Email />
                 </ListItemIcon>
-                <ListItemText primary={settings?.email} />
+                <ListItemText primary={info?.email} />
               </ListItem>
               <ListItem button key={"swipeable-drawer-home"}>
                 <ListItemIcon className={classes.swipeableDrawerListItemIcon}>

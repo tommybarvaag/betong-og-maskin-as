@@ -48,24 +48,25 @@ export default {
       type: "string"
     },
     {
-      name: "facebookUrl",
-      title: "Facebook URL",
-      type: "url"
+      name: "googleMapsLatitude",
+      title: "Google Maps Latitude",
+      type: "number"
     },
     {
-      name: "linkedInUrl",
-      title: "LinkedIn URL",
-      type: "url"
+      name: "googleMapsLongitude",
+      title: "Google Maps Longitude",
+      type: "number"
     },
     {
-      name: "twitterUrl",
-      title: "Twitter URL",
-      type: "url"
+      name: "googleMapsZoom",
+      title: "Google Maps Zoom level",
+      type: "number"
     },
     {
-      name: "gitHubUrl",
-      title: "GitHub URL",
-      type: "url"
+      name: "socialMedias",
+      title: "Social Media",
+      type: "array",
+      of: [{ type: "socialMedia" }]
     }
   ]
 };
