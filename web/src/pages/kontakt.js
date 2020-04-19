@@ -1,11 +1,19 @@
+import Container from "@material-ui/core/Container";
 import React from "react";
+import BlockText from "../components/blockText";
 import Layout from "../components/layout";
 import { getPage } from "../lib/sanity/api";
 
 export default function Contact(props) {
   const { page, settings, info } = props;
 
-  return <Layout page={page} settings={settings} info={info}></Layout>;
+  return (
+    <Layout page={page} settings={settings} info={info}>
+      <Container>
+        <BlockText blocks={page?.text} />
+      </Container>
+    </Layout>
+  );
 }
 
 export async function getStaticProps({ preview = false }) {
