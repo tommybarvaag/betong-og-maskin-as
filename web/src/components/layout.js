@@ -20,7 +20,7 @@ export default function Layout(props) {
         <meta property="og:description" content={page?.metaDescription ?? "Meta desc"}></meta>
         <meta property="og:url" content="/"></meta>
         <meta property="og:type" content="website"></meta>
-        <meta property="og:image" content="/logo.jpg"></meta>
+        <meta property="og:image" content="https://betongogmaskin.no/logo.png"></meta>
         <meta property="og:locale" content="nb_NO"></meta>
         <meta property="og:site_name" content={info?.name}></meta>
         <script type="application/ld+json">{`"@context": "https://schema.org",
@@ -28,7 +28,7 @@ export default function Layout(props) {
             "name": "${info?.name}",
             "legalName": "${info?.name}",
             "url": "https://betongogmaskin.no/",
-            "logo": "https://betongogmaskin.no/logo.jpg",
+            "logo": "https://betongogmaskin.no/logo.png",
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "${info?.address1}",
@@ -42,7 +42,9 @@ export default function Layout(props) {
                 "telephone": "${info?.phone}",
                 "email": "${info?.email}"
             },
-            "sameAs": ["https://www.facebook.com/betongogmaskin","https://www.linkedin.com/in/betongogmaskin/"]`}</script>
+            "sameAs": ${JSON.stringify(
+              info?.socialMedias.map(socialMedia => socialMedia?.url) ?? []
+            )}`}</script>
       </Head>
       <Nav page={page} settings={settings} info={info} />
       <Hero title={page?.title} text={page?.text} image={page?.image} />
