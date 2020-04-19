@@ -76,7 +76,8 @@ export default function Hero(props) {
             {title}
           </Typography>
           <Typography variant="h5" className={classes.heroText} align="left" component="p">
-            {"Hi"}
+            {/* TODO: Add text */}
+            {/* {"Text"} */}
           </Typography>
         </Container>
       </Container>

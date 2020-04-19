@@ -67,7 +67,8 @@ export default function Layout(props) {
               transform: "translate(-50%,-50%)"
             }}
           >
-            {"Hi"}
+            {/* TODO: // Add parallax text */}
+            {/* {"Parallax text"} */}
           </div>
         </div>
       </Parallax>
