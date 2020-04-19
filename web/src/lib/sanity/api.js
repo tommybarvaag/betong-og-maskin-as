@@ -64,6 +64,7 @@ export async function getPage(pageName, preview = false) {
         title,
         image,
         text,
+        parallaxImage,
         enableContactForm,
         enableGoogleMaps
       }|[0]

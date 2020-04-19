@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core";
 import Head from "next/head";
 import React from "react";
 import { imageBuilder } from "../lib/sanity/api";
@@ -46,32 +47,37 @@ export default function Layout(props) {
       <Nav page={page} settings={settings} info={info} />
       <Hero title={page?.title} text={page?.text} image={page?.image} />
       {children}
-      <Parallax
-        bgImage={imageBuilder
-          .image("image-8b2b9244349ad7755cd6ee6cc0cd5c3fc215702a-5760x3840-jpg")
-          .width(1920)
-          .height(1000)
-          .format("webp")
-          .quality(90)
-          .url()}
-        strength={500}
-      >
-        <div style={{ height: 500 }}>
-          <div
-            style={{
-              background: "white",
-              padding: 20,
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%,-50%)"
-            }}
-          >
-            {/* TODO: // Add parallax text */}
-            {/* {"Parallax text"} */}
-          </div>
-        </div>
-      </Parallax>
+      {page?.parallaxImage && (
+        <Parallax
+          bgImage={imageBuilder
+            .image(page?.parallaxImage?.asset)
+            .width(1920)
+            .height(1000)
+            .format("webp")
+            .quality(90)
+            .url()}
+          strength={500}
+        >
+          {page?.parallaxImage?.caption && (
+            <div style={{ height: 500 }}>
+              <div
+                style={{
+                  background: "white",
+                  padding: 20,
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%,-50%)"
+                }}
+              >
+                <Typography component="h3" variant="h3" align="left" gutterBottom>
+                  {page?.parallaxImage?.caption}
+                </Typography>
+              </div>
+            </div>
+          )}
+        </Parallax>
+      )}
       <Footer page={page} settings={settings} info={info} />
     </>
   );

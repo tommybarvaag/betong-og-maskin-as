@@ -31,6 +31,11 @@ export default {
       type: "blockText"
     },
     {
+      name: "parallaxImage",
+      title: "Parallax Image",
+      type: "mainImage"
+    },
+    {
       name: "enableContactForm",
       title: "Enable contact form",
       type: "boolean"
