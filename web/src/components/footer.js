@@ -2,14 +2,14 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Facebook from "@material-ui/icons/Facebook";
+import GitHub from "@material-ui/icons/GitHub";
 import LinkedIn from "@material-ui/icons/LinkedIn";
 import Twitter from "@material-ui/icons/Twitter";
-import GitHub from "@material-ui/icons/GitHub";
 import { makeStyles } from "@material-ui/styles";
 import React from "react";
+import ContactForm from "./contactForm";
 import Copyright from "./copyright";
 import GoogleMap from "./googleMap";
-import ContactForm from "./contactForm";
 import Link from "./link";
 
 const useStyles = makeStyles(theme => ({
@@ -99,7 +99,16 @@ export default function Footer(props) {
                 paragraph
                 gutterBottom
               >
-                Betong & Maskin AS
+                {info?.name}
+              </Typography>
+              <Typography
+                className={classes.footerTextContent}
+                variant="body1"
+                color="textSecondary"
+                paragraph
+                gutterBottom
+              >
+                {`${info?.address1}, ${info?.zipCode} ${info?.city}`}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={3}>
