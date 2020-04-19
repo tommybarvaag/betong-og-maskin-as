@@ -23,7 +23,6 @@ export default function Home(props) {
               <Grid item key={service.title} xs={12} sm={12 / services.length}>
                 <ContentCard
                   title={service?.title}
-                  text={"Text"}
                   image={service?.mainImage}
                   // href={service?.slug?.current ?? "/"}
                 />
