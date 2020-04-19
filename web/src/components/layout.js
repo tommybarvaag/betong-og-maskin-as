@@ -23,28 +23,30 @@ export default function Layout(props) {
         <meta property="og:image" content="https://betongogmaskin.no/logo.png"></meta>
         <meta property="og:locale" content="nb_NO"></meta>
         <meta property="og:site_name" content={info?.name}></meta>
-        <script type="application/ld+json">{`"@context": "https://schema.org",
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "${info?.name}",
-            "legalName": "${info?.name}",
-            "url": "https://betongogmaskin.no/",
-            "logo": "https://betongogmaskin.no/logo.png",
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "${info?.address1}",
-                "addressRegion": "${info?.city}",
-                "postalCode": "${info?.zipCode}",
-                "addressCountry": "${info?.country}"
+            name: info?.name,
+            legalName: info?.name,
+            url: "https://betongogmaskin.no/",
+            logo: "https://betongogmaskin.no/logo.png",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: info?.address1,
+              addressRegion: info?.city,
+              postalCode: info?.zipCode,
+              addressCountry: info?.country
             },
-            "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "Sales and support",
-                "telephone": "${info?.phone}",
-                "email": "${info?.email}"
+            contactPoint: {
+              "@type": "ContactPoint",
+              contactType: "Sales and support",
+              telephone: info?.phone,
+              email: info?.email
             },
-            "sameAs": ${JSON.stringify(
-              info?.socialMedias.map(socialMedia => socialMedia?.url) ?? []
-            )}`}</script>
+            sameAs: info?.socialMedias.map(socialMedia => socialMedia?.url) ?? []
+          })}
+        </script>
       </Head>
       <Nav page={page} settings={settings} info={info} />
       <Hero title={page?.title} text={page?.text} image={page?.image} />
