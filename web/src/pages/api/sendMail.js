@@ -21,12 +21,13 @@ export default async (req, res) => {
     sendgridMail.setApiKey(apiKey);
 
     await sendgridMail.send({
-      to: "tommy@barvaag.com",
-      from: "post@betongogmaskin.no",
-      subject: `Contact from ${req.body.name}`,
+      to: "joar@betongogmaskin.no",
+      bcc: "jmork@online.no",
+      from: req.body.email,
+      subject: `Betong & Maskin AS kontaktskjema: ${req.body.name}`,
       html: `<div>
-          <h3>New message from ${req.body.name}</h3>
-          <p>Can be contacted at: <a href="mailto:${req.body.email}">${req.body.email}</a>.</p>
+          <h3>Ny beskjed fra ${req.body.name}</h3>
+          <p>Kontaktes: <a href="mailto:${req.body.email}">${req.body.email}</a>.</p>
           <p>${req.body.text}</p>
         </div>`
     });
