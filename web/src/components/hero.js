@@ -9,7 +9,7 @@ const validImage = image => image !== null && image !== undefined;
 const useStyles = makeStyles(theme => ({
   hero: {
     position: "relative",
-    padding: 0,
+    padding: props => (validImage(props?.image) ? 0 : theme.spacing(6, 0, 0)),
     lineHeight: 0,
     "&::before": {
       content: props => (validImage(props?.image) ? "''" : ""),
