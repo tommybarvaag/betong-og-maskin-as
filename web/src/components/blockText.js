@@ -14,5 +14,5 @@ const serializers = {
 };
 
 export default function BlockText({ blocks }) {
-  return <BaseBlockContent blocks={blocks} serializers={serializers} />;
+  return blocks ? <BaseBlockContent blocks={blocks} serializers={serializers} /> : null;
 }

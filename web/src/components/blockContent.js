@@ -42,7 +42,7 @@ const serializers = {
 };
 
 function BlockContent({ blocks }) {
-  return <BaseBlockContent blocks={blocks} serializers={serializers} />;
+  return blocks ? <BaseBlockContent blocks={blocks} serializers={serializers} /> : null;
 }
 
 export default BlockContent;
