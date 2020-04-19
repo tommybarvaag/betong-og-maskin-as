@@ -143,8 +143,6 @@ export default function Nav(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  console.log(settings);
-
   const address = `${info?.address1}, ${info?.zipCode} ${info?.city}`;
 
   return (
