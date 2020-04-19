@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     lineHeight: 0,
     "&::before": {
-      content: "''",
+      content: props => (validImage(props?.image) ? "''" : ""),
       position: "absolute",
       background: "#000",
       opacity: ".5",
@@ -30,7 +30,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   heroContent: {
-    position: "absolute",
+    position: props => (validImage(props?.image) ? "absolute" : "relative"),
+    padding: 0,
     top: 0,
     left: 0,
     right: 0,
