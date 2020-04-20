@@ -48,6 +48,13 @@ const theme = createMuiTheme({
       yellow: "rgb(255, 182, 0)",
       black: "rgb(20, 24, 36)"
     }
+  },
+  overrides: {
+    MuiCssBaseline: {
+      "@global": {
+        "@font-face": ""
+      }
+    }
   }
 });
 
