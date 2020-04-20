@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Home(props) {
-  const { page, settings, info, services } = props;
+  const { preview, page, settings, info, services, ...other } = props;
   const classes = useStyles();
 
   function renderServices() {
@@ -38,7 +38,7 @@ export default function Home(props) {
   }
 
   return (
-    <Layout page={page} settings={settings} info={info}>
+    <Layout preview={preview} page={page} settings={settings} info={info}>
       <Container className={classes.container}>
         <BlockText blocks={page?.text} />
         {renderServices()}
@@ -52,6 +52,6 @@ export async function getStaticProps({ preview = false }) {
 
   return {
     unstable_revalidate: 3600,
-    props: { ...home }
+    props: { ...home, preview }
   };
 }

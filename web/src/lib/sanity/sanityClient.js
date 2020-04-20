@@ -14,5 +14,6 @@ export default sanityClient(options);
 export const previewClient = sanityClient({
   ...options,
   useCdn: false,
-  token: process.env.BOM_SANITY_PROJECT_ID
+  token: process.env.BOM_SANITY_PREVIEW_TOKEN,
+  withCredentials: true
 });

@@ -5,10 +5,10 @@ import Layout from "../components/layout";
 import { getPage } from "../lib/sanity/api";
 
 export default function About(props) {
-  const { page, settings, info } = props;
+  const { preview, page, settings, info } = props;
 
   return (
-    <Layout page={page} settings={settings} info={info}>
+    <Layout preview={preview} page={page} settings={settings} info={info}>
       <Container>
         <BlockText blocks={page?.text} />
       </Container>
@@ -17,10 +17,10 @@ export default function About(props) {
 }
 
 export async function getStaticProps({ preview = false }) {
-  const home = await getPage("about", preview);
+  const about = await getPage("about", preview);
 
   return {
     unstable_revalidate: 3600,
-    props: { ...home }
+    props: { ...about, preview }
   };
 }

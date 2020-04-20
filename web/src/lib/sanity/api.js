@@ -20,7 +20,7 @@ const postFields = `
   excerpt,
   'slug': slug.current,
   'mainImage': mainImage,
-  'author': author -> {name, 'picture': picture.asset->url}
+  'author': author -> {name, 'picture': picture.asset->url},
 `;
 
 const getClient = preview => (preview ? previewClient : client);

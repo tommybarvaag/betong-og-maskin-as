@@ -1,3 +1,4 @@
+import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Head from "next/head";
 import * as React from "react";
@@ -8,7 +9,7 @@ import Nav from "./nav";
 import Parallax from "./parallax";
 
 export default function Layout(props) {
-  const { page, settings, info, children } = props;
+  const { preview, page, settings, info, children } = props;
 
   return (
     <>
@@ -48,6 +49,16 @@ export default function Layout(props) {
           })}
         </script>
       </Head>
+      {preview && (
+        <Container>
+          <Typography component="h3" variant="h3" align="center" gutterTop gutterBottom>
+            In preview mode
+          </Typography>
+          <Typography paragraph align="center">
+            Click <a href="/api/exit-preview">here</a> to exit preview mode.
+          </Typography>
+        </Container>
+      )}
       <Nav page={page} settings={settings} info={info} />
       <Hero title={page?.title} text={page?.text} image={page?.image} />
       {children}
