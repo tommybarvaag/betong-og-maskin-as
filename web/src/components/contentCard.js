@@ -24,7 +24,7 @@ export default function ContentCard(props) {
         condition={href !== null && href !== undefined}
         wrapper={children => <Link href={href}>{children}</Link>}
       >
-        <Image image={image} width={400} height={500} fit="crop" />
+        <Image image={image} width={400} height={500} quality={75} fit="crop" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {title}

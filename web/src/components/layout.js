@@ -58,7 +58,7 @@ export default function Layout(props) {
             .width(1920)
             .height(1000)
             .format("webp")
-            .quality(90)
+            .quality(75)
             .url()}
           strength={500}
           bgImageAlt={page?.parallaxImage?.alt ?? page?.parallaxImage?.caption ?? "Parallax image"}

@@ -62,6 +62,7 @@ export default function Hero(props) {
           height={500}
           phoneWidth={600}
           phoneHeight={600}
+          quality={75}
           fit="crop"
           forceLoad
         />
