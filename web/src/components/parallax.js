@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import handleViewport from "react-in-viewport/dist/lib/handleViewport";
+import ParallaxChildren from "./parallaxChildren";
 import {
   canUseDOM,
   getNodeHeight,
@@ -7,7 +9,6 @@ import {
   getSplitChildren,
   isScrolledIntoView
 } from "./utils";
-import ParallaxChildren from "./parallaxChildren";
 
 const initialStyle = {
   position: "absolute",
@@ -20,7 +21,7 @@ const initialStyle = {
   MsBackfaceVisibility: "hidden"
 };
 
-class Parallax extends Component {
+class ParallaxBase extends Component {
   constructor(props) {
     super(props);
 
@@ -60,14 +61,14 @@ class Parallax extends Component {
    * save component ref after rendering, update all values and set static style values
    */
   componentDidMount() {
-    const { parent } = this.props;
+    const { parent, inViewport } = this.props;
     const { bgImage, bgImageSrcSet, bgImageSizes } = this.state;
 
     this.parent = parent || document;
     this.addListeners();
     // ref to component itself
 
-    if (bgImage) {
+    if (bgImage && inViewport) {
       this.loadImage(bgImage, bgImageSrcSet, bgImageSizes);
     } else {
       this.updatePosition();
@@ -75,7 +76,7 @@ class Parallax extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { parent, bgImage, bgImageSrcSet, bgImageSizes } = this.props;
+    const { parent, bgImage, bgImageSrcSet, bgImageSizes, inViewport } = this.props;
     const { bgImage: stateBgImage } = this.state;
     this.splitChildren = getSplitChildren(this.props);
 
@@ -89,7 +90,7 @@ class Parallax extends Component {
 
     this.parentHeight = getNodeHeight(this.canUseDOM, this.parent);
 
-    if (stateBgImage !== bgImage) {
+    if (stateBgImage !== bgImage && inViewport) {
       this.loadImage(bgImage, bgImageSrcSet, bgImageSizes);
     }
   }
@@ -305,7 +306,8 @@ class Parallax extends Component {
       contentClassName,
       bgImageAlt,
       renderLayer,
-      bgImageStyle
+      bgImageStyle,
+      inViewport
     } = this.props;
     const { bgImage, bgImageSrcSet, bgImageSizes, percentage, imgStyle, bgStyle } = this.state;
     return (
@@ -316,7 +318,7 @@ class Parallax extends Component {
           this.node = node;
         }}
       >
-        {bgImage ? (
+        {bgImage && inViewport ? (
           <img
             className={bgClassName}
             src={bgImage}
@@ -349,7 +351,7 @@ class Parallax extends Component {
   }
 }
 
-Parallax.propTypes = {
+ParallaxBase.propTypes = {
   bgClassName: PropTypes.string,
   bgImage: PropTypes.string,
   bgImageAlt: PropTypes.string,
@@ -369,7 +371,7 @@ Parallax.propTypes = {
   style: PropTypes.shape({})
 };
 
-Parallax.defaultProps = {
+ParallaxBase.defaultProps = {
   bgClassName: "react-parallax-bgimage",
   bgImage: undefined,
   bgImageAlt: "",
@@ -387,5 +389,7 @@ Parallax.defaultProps = {
   strength: 100,
   style: undefined
 };
+
+const Parallax = handleViewport(ParallaxBase, { rootMargin: "-1.0px" });
 
 export default Parallax;
