@@ -20,7 +20,7 @@ export async function getStaticProps({ preview = false }) {
   const home = await getPage("contact", preview);
 
   return {
-    unstable_revalidate: 8,
+    unstable_revalidate: 3600,
     props: { ...home }
   };
 }
