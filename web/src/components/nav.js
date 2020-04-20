@@ -16,7 +16,7 @@ import Home from "@material-ui/icons/Home";
 import Menu from "@material-ui/icons/Menu";
 import Phone from "@material-ui/icons/Phone";
 import makeStyles from "@material-ui/styles/makeStyles";
-import React from "react";
+import * as React from "react";
 import Link from "./link";
 import Svg from "./svg";
 

@@ -1,5 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import React from "react";
+import * as React from "react";
 
 const useStyles = makeStyles(theme => ({
   figure: {

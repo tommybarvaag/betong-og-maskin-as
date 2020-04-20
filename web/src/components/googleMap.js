@@ -1,5 +1,5 @@
 import { GoogleMap as ReactGoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import React from "react";
+import * as React from "react";
 import handleViewport from "react-in-viewport";
 
 function GoogleMapBase(props) {

@@ -1,6 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import BaseBlockContent from "@sanity/block-content-to-react";
-import React from "react";
+import * as React from "react";
 
 const serializers = {
   types: {

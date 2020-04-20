@@ -3,7 +3,7 @@ import clsx from "clsx";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import React from "react";
+import * as React from "react";
 
 const NextComposed = React.forwardRef(function NextComposed(props, ref) {
   const { as, href, prefetch, ...other } = props;

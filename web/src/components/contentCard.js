@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
-import React from "react";
+import * as React from "react";
 import ConditionalWrapper from "./conditionalWrapper";
 import Image from "./image";
 import Link from "./link";

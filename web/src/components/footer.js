@@ -6,7 +6,7 @@ import GitHub from "@material-ui/icons/GitHub";
 import LinkedIn from "@material-ui/icons/LinkedIn";
 import Twitter from "@material-ui/icons/Twitter";
 import makeStyles from "@material-ui/styles/makeStyles";
-import React from "react";
+import * as React from "react";
 import ContactForm from "./contactForm";
 import Copyright from "./copyright";
 import GoogleMap from "./googleMap";

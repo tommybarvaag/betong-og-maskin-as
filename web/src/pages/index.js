@@ -1,7 +1,7 @@
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import React from "react";
+import * as React from "react";
 import BlockText from "../components/blockText";
 import ContentCard from "../components/contentCard";
 import Layout from "../components/layout";

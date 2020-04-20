@@ -3,7 +3,7 @@ import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/styles/makeStyles";
-import React from "react";
+import * as React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const useStyles = makeStyles(theme => ({
