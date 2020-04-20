@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import makeStyles from "@material-ui/styles/makeStyles";
 import clsx from "clsx";
 import React from "react";
 import LogoYellow from "../../public/logo-yellow.svg";

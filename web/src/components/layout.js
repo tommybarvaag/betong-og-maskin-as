@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import Head from "next/head";
 import React from "react";
 import { imageBuilder } from "../lib/sanity/api";

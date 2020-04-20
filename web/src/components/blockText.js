@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import BaseBlockContent from "@sanity/block-content-to-react";
 import React from "react";
 

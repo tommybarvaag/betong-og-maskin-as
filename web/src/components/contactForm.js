@@ -1,5 +1,8 @@
-import { Button, Container, TextField, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import makeStyles from "@material-ui/styles/makeStyles";
 import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
