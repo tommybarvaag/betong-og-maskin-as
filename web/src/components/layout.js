@@ -61,6 +61,7 @@ export default function Layout(props) {
             .quality(90)
             .url()}
           strength={500}
+          bgImageAlt={page?.parallaxImage?.alt ?? page?.parallaxImage?.caption ?? "Parallax image"}
         >
           {page?.parallaxImage?.caption && (
             <div style={{ height: 500 }}>

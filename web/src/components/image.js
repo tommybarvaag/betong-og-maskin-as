@@ -1,6 +1,8 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/";
 import clsx from "clsx";
+import handleViewport from "react-in-viewport";
 import { imageBuilder } from "../lib/sanity/api";
+import Skeleton from "./skeleton";
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -9,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Image({
+function ImageBase({
   className,
   image,
   alt,
@@ -18,9 +20,19 @@ export default function Image({
   phoneWidth = 600,
   phoneHeight = null,
   quality = 90,
-  fit = "max"
+  fit = "max",
+  inViewport,
+  forwardedRef
 }) {
   const classes = useStyles();
+
+  const [load, setLoad] = React.useState(false);
+
+  React.useEffect(() => {
+    if (inViewport) {
+      setLoad(true);
+    }
+  }, [inViewport]);
 
   const imageUrl =
     fit === "crop" && image?.hotspot !== null && image?.hotspot !== undefined
@@ -65,14 +77,28 @@ export default function Image({
           .url();
 
   return (
-    <picture>
-      <source media="(max-width: 599px)" srcSet={phoneImageUrl} />
-      <source media="(min-width: 600px)" srcSet={imageUrl} />
-      <img
-        className={clsx(classes.image, className)}
-        src={imageUrl}
-        alt={alt ?? image?.alt ?? "Missing alt"}
-      />
-    </picture>
+    <div ref={forwardedRef}>
+      {load ? (
+        <picture>
+          <source media="(max-width: 599px)" srcSet={phoneImageUrl} />
+          <source media="(min-width: 600px)" srcSet={imageUrl} />
+          <img
+            className={clsx(classes.image, className)}
+            src={imageUrl}
+            alt={alt ?? image?.alt ?? "Missing alt"}
+          />
+        </picture>
+      ) : (
+        <Skeleton
+          variant="rect"
+          width={width}
+          height={height ? height : Math.floor((9 / 16) * width)}
+        />
+      )}
+    </div>
   );
 }
+
+const Image = handleViewport(ImageBase, { rootMargin: "-1.0px" });
+
+export default Image;
