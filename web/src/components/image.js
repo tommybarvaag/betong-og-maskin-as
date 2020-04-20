@@ -21,12 +21,13 @@ function ImageBase({
   phoneHeight = null,
   quality = 90,
   fit = "max",
+  forceLoad = false,
   inViewport,
   forwardedRef
 }) {
   const classes = useStyles();
 
-  const [load, setLoad] = React.useState(false);
+  const [load, setLoad] = React.useState(forceLoad);
 
   React.useEffect(() => {
     if (inViewport) {

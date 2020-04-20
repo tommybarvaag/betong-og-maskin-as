@@ -63,6 +63,7 @@ export default function Hero(props) {
           phoneWidth={600}
           phoneHeight={600}
           fit="crop"
+          forceLoad
         />
       )}
       <Container className={classes.heroContent} maxWidth="lg">
