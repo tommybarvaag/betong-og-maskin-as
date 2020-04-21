@@ -68,7 +68,7 @@ export default function Layout(props) {
             .image(page?.parallaxImage?.asset)
             .width(1920)
             .height(1000)
-            .format("webp")
+            .auto("format")
             .quality(75)
             .url()}
           strength={500}
