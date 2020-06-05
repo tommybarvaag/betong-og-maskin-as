@@ -2,6 +2,6 @@ User-agent: *
 Allow: /
 Sitemap: https://www.betongogmaskin.no/sitemap.xml
 User-Agent: Googlebot
-Allow: .js
-Allow: .css
+Allow: *.js
+Allow: *.css
 Disallow: /studio
