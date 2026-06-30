@@ -88,7 +88,7 @@ export function GalleryLightbox({ images }: { images: GalleryImage[] }) {
               />
             ) : null}
             {active?.caption ? (
-              <span className="font-mono text-[11px] tracking-[1px] text-[#5a6376]">
+              <span className="text-faint font-mono text-[11px] tracking-[1px]">
                 {active.caption}
               </span>
             ) : null}

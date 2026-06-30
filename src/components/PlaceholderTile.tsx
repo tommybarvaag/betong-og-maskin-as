@@ -25,7 +25,7 @@ export function PlaceholderTile({
       }}
     >
       <ImageIcon className="size-[30px] text-[#3a4255]" strokeWidth={1.6} />
-      <span className="px-4 text-center font-mono text-[11px] tracking-[1px] text-[#5a6376]">
+      <span className="text-faint px-4 text-center font-mono text-[11px] tracking-[1px]">
         {label}
       </span>
     </div>

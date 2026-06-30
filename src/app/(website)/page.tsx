@@ -61,6 +61,7 @@ export default async function HomePage() {
           alt="Betong og maskinarbeid på Radøy"
           fill
           priority
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover"
         />
