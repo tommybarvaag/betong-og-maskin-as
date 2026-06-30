@@ -121,7 +121,7 @@ export function Footer({ info }: { info: Info }) {
             © {companyName(info)} <CopyrightYear />. Alle rettigheter
             forbeholdt.
           </span>
-          <span className="font-mono text-[11px] tracking-[1.5px] text-[#4d5667]">
+          <span className="text-faint font-mono text-[11px] tracking-[1.5px]">
             RADØY · ALVER KOMMUNE
           </span>
         </div>

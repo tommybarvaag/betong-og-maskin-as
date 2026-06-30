@@ -21,7 +21,6 @@ const cspReportOnly = [
   "connect-src 'self' https://*.sanity.io wss://*.api.sanity.io https://challenges.cloudflare.com",
   "frame-src 'self' https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
-  "upgrade-insecure-requests",
 ].join("; ");
 
 const nextConfig: NextConfig = {

@@ -1,14 +1,14 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import Script from "next/script";
-import { Send, Check } from "lucide-react";
-import { mergeForm, useForm, useTransform } from "@tanstack/react-form-nextjs";
-import type { AnyFieldApi } from "@tanstack/react-form";
 import { submitContact } from "@/app/actions/contact";
 import { contactFormOpts, type ContactFormResult } from "@/lib/contact-schema";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+import { cn } from "@/lib/utils";
+import type { AnyFieldApi } from "@tanstack/react-form";
+import { mergeForm, useForm, useTransform } from "@tanstack/react-form-nextjs";
+import { Check, Send } from "lucide-react";
+import Script from "next/script";
+import { useActionState, useEffect, useState } from "react";
+import { Button } from "./ui/button";
 import {
   Field,
   FieldError,
@@ -17,8 +17,8 @@ import {
   FieldLegend,
   FieldSet,
 } from "./ui/field";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 // Empty formState => mergeForm no-op on mount; the form uses its own defaultValues.
 const initialResult: ContactFormResult = {
@@ -111,6 +111,7 @@ export function ContactForm({
   // Bumped on every error to remount the Turnstile widget so it re-arms with a fresh token —
   // the previous one is spent once verified.
   const [widgetKey, setWidgetKey] = useState(0);
+  const [isActivated, setIsActivated] = useState(false);
 
   const form = useForm({
     ...contactFormOpts,
@@ -161,12 +162,19 @@ export function ContactForm({
           {description}
         </p>
       ) : null}
-      <Script
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        async
-        defer
-      />
-      <form action={formAction} onSubmit={() => form.handleSubmit()}>
+      {isActivated ? (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+        />
+      ) : null}
+      <form
+        action={formAction}
+        onSubmit={() => form.handleSubmit()}
+        onFocusCapture={() => setIsActivated(true)}
+        onPointerDownCapture={() => setIsActivated(true)}
+      >
         <FieldSet>
           <FieldLegend className="sr-only">Kontaktskjema</FieldLegend>
           <FieldGroup>
@@ -208,10 +216,11 @@ export function ContactForm({
               className="hidden"
               aria-hidden="true"
             />
-            {siteKey ? (
+            {isActivated && siteKey ? (
               <div
                 key={widgetKey}
                 className="cf-turnstile"
+                data-theme="dark"
                 data-sitekey={siteKey}
               />
             ) : null}
