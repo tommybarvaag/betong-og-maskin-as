@@ -1,0 +1,6 @@
+node_modules
+.next
+pnpm-lock.yaml
+src/sanity/sanity.types.ts
+schema.json
+docs

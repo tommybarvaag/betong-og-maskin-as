@@ -1,16 +1,34 @@
-# macOS files
+# macOS
 .DS_Store
 
 # dependencies
 /node_modules
 
-# lerna
-/lerna-debug.log
+# next.js
+/.next/
+/out/
+next-env.d.ts
 
-# now
-.now
+# production
+/build
+
+# NOTE: schema.json + src/sanity/sanity.types.ts are intentionally COMMITTED
+# (the CI typegen drift gate diffs them) — do not ignore them.
+
+# env
+.env
+.env*.local
 
 # debug
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
+
+# editor
+*.tsbuildinfo
+
+.ref
+.vercel
+.env
+.env.local
+.env*

@@ -1,0 +1,6 @@
+# Single package (no workspace members) — pnpm 11 settings only.
+# pnpm 11 replaced package.json#pnpm.onlyBuiltDependencies with this allowBuilds map.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  "@tailwindcss/oxide": true
