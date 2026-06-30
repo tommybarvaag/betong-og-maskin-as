@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    # Make the Sanity dataset explicit so the build reads published 'production'
+    # content from the CDN by intent, not via env.ts's implicit fallback.
+    # Read-only published content needs no API token.
+    env:
+      NEXT_PUBLIC_SANITY_DATASET: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      # Typegen drift gate: regenerate and fail if the committed types/schema are stale.
+      - run: pnpm typegen
+      - run: git diff --exit-code schema.json src/sanity/sanity.types.ts
+      - run: pnpm test
+      - run: pnpm knip
+      - run: pnpm build

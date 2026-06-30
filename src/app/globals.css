@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Rugged-industrial dark theme (locked, agreed with client). Single dark palette — the `dark`
+   class on <html> only exists so shadcn primitives' `dark:` refinements still resolve. Hex/rgba
+   values are taken verbatim from the .dc.html prototype. */
+:root {
+  /* brand raw palette */
+  --bom-bg: #0f1320;
+  --bom-bg-alt: #141824;
+  --bom-panel: #11151f;
+  --bom-surface: #161b27;
+  --bom-elevated: #1b2231;
+  --bom-amber: #f2a413;
+  --bom-amber-hover: #ffb730;
+  --bom-ink: #1a1205;
+  --bom-text: #f4f6fa;
+  --bom-dim: #cdd3de;
+  --bom-muted: #98a2b3;
+  --bom-faint: #6b7689;
+  --bom-line: rgba(255, 255, 255, 0.09);
+
+  /* shadcn semantic tokens mapped to the brand palette */
+  --background: var(--bom-bg);
+  --foreground: var(--bom-text);
+  --card: var(--bom-surface);
+  --card-foreground: var(--bom-text);
+  --popover: var(--bom-bg-alt);
+  --popover-foreground: var(--bom-text);
+  --primary: var(--bom-amber);
+  --primary-foreground: var(--bom-ink);
+  --secondary: var(--bom-elevated);
+  --secondary-foreground: var(--bom-text);
+  --muted: var(--bom-panel);
+  --muted-foreground: var(--bom-muted);
+  --accent: #1a2130;
+  --accent-foreground: var(--bom-text);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: var(--bom-line);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: var(--bom-amber);
+  --radius: 0.625rem;
+}
+
+/* Tailwind v4 theme: expose tokens as utilities (bg-background, text-primary, font-display, …). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* brand extras for exact-match utilities (amber is `primary`; ink is `primary-foreground`) */
+  --color-amber-hover: var(--bom-amber-hover);
+  --color-surface: var(--bom-surface);
+  --color-panel: var(--bom-panel);
+  --color-elevated: var(--bom-elevated);
+  --color-dim: var(--bom-dim);
+  --color-faint: var(--bom-faint);
+  --color-line: var(--bom-line);
+
+  --font-sans: var(--font-archivo);
+  --font-display: var(--font-oswald);
+  --font-mono: var(--font-jetbrains-mono);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 6px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  ::selection {
+    background: var(--bom-amber);
+    color: var(--bom-ink);
+  }
+}
