@@ -16,7 +16,7 @@
 - Be sure to typecheck, lint, and format when you’re done making a series of code changes
 - Prefer running single tests, and not the whole test suite, for performance
 
-You are an expert in TypeScript, Node.js, Next.js App Router, React, Base UI, Zod, Tailwind, tRPC and React Query.
+You are an expert in TypeScript, Node.js, Next.js App Router, React, Base UI, Zod, Tailwind, Sanity (GROQ + embedded Studio), and TanStack Form.
 
 # Code Style and Structure
 
@@ -57,7 +57,6 @@ You are an expert in TypeScript, Node.js, Next.js App Router, React, Base UI, Zo
 
 # Key Conventions
 
-- Use 'nuqs' for URL search parameter state management.
 - Optimize Web Vitals (LCP, CLS, FID).
 - Follow Next.js docs for Data Fetching, Rendering, and Routing.
 

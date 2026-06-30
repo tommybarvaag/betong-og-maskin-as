@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { ContactMethodCard } from "@/components/ContactMethodCard";
+import { GalleryLightbox } from "@/components/GalleryLightbox";
 import { KickerLabel } from "@/components/KickerLabel";
-import { MediaTile } from "@/components/MediaTile";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { PillarCard } from "@/components/PillarCard";
 import { ServiceIcon } from "@/components/ServiceIcon";
@@ -188,16 +188,7 @@ export default async function HomePage() {
             {page.gallery?.heading}
           </h2>
         </div>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
-          {galleryImages.map((image) => (
-            <MediaTile
-              key={image._key}
-              image={image}
-              label={image.caption ?? ""}
-              className="rounded-xl"
-            />
-          ))}
-        </div>
+        <GalleryLightbox images={galleryImages} />
       </section>
 
       <section

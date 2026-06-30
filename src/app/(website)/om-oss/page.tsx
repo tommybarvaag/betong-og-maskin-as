@@ -87,9 +87,9 @@ export default async function OmOssPage() {
           </h2>
         </div>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
-          {serviceList.map((service) => (
+          {serviceList.map((service, i) => (
             <div
-              key={service}
+              key={`${service}-${i}`}
               className="border-line bg-surface flex items-center gap-3.5 rounded-[11px] border px-5 py-[18px]"
             >
               <Check

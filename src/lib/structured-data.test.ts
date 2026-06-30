@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { localBusinessJsonLd } from "./structured-data";
+import { jsonLdScript, localBusinessJsonLd } from "./structured-data";
 import type { Info } from "./company";
 
 function makeInfo(overrides: Partial<NonNullable<Info>> = {}): Info {
@@ -58,5 +58,31 @@ describe("localBusinessJsonLd", () => {
     expect(ld.name).toBe("Annet AS");
     expect(ld.address.addressLocality).toBe("Bergen");
     expect(ld.address.postalCode).toBe("5000");
+  });
+
+  it("escapes a </script> breakout payload in CMS fields", () => {
+    const payload = "</script><script>alert(1)</script>";
+    const out = jsonLdScript(localBusinessJsonLd(makeInfo({ name: payload })));
+
+    expect(out).not.toContain("</script>");
+    expect(out).not.toContain("<script>");
+
+    const reparsed = JSON.parse(out);
+    expect(reparsed.name).toBe(payload);
+  });
+
+  it("escapes a </script> breakout payload in a sameAs URL", () => {
+    const payload = "https://x/</script><script>alert(1)</script>";
+    const out = jsonLdScript(
+      localBusinessJsonLd(
+        makeInfo({ socialMedias: [{ type: "Facebook", url: payload }] }),
+      ),
+    );
+
+    expect(out).not.toContain("</script>");
+    expect(out).not.toContain("<script>");
+
+    const reparsed = JSON.parse(out);
+    expect(reparsed.sameAs).toContain(payload);
   });
 });

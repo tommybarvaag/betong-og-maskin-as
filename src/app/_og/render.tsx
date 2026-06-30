@@ -4,8 +4,8 @@ import { join } from "node:path";
 
 // Shared satori-rendered social card (vercel/satori via next/og). The opengraph-image and
 // twitter-image routes import OG_* and renderOgImage from here, so og:image and twitter:image
-// stay byte-identical. The routes are dynamic under cacheComponents; the woff reads run per
-// render (CDN-cacheable downstream).
+// stay byte-identical. The fonts are read once per process (module-scope promise); the
+// rasterized PNG is statically optimized at build.
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
 export const OG_ALT = "Betong & Maskin AS — mur, betong og graving på Radøy";
@@ -35,8 +35,12 @@ async function loadFonts() {
   ];
 }
 
+// Read the two woff buffers once per process, not per render. The card has no
+// per-request inputs, so the fonts never change for the life of the process.
+const fontsPromise = loadFonts();
+
 export async function renderOgImage() {
-  const fonts = await loadFonts();
+  const fonts = await fontsPromise;
 
   return new ImageResponse(
     <div

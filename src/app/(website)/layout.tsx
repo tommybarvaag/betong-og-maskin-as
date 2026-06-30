@@ -5,7 +5,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { loadLayout } from "@/sanity/lib/load";
-import { localBusinessJsonLd } from "@/lib/structured-data";
+import { jsonLdScript, localBusinessJsonLd } from "@/lib/structured-data";
 
 export default async function WebsiteLayout({
   children,
@@ -21,7 +21,7 @@ export default async function WebsiteLayout({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
       />
       <Header info={info} />
       <main>{children}</main>

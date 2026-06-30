@@ -6,7 +6,7 @@ import {
   phoneDisplayShort,
   mailtoHref,
   emailAddress,
-  facebookUrl,
+  socialLinks,
   orgNumber,
   managingDirector,
   companyName,
@@ -79,19 +79,48 @@ describe("mailtoHref", () => {
   });
 });
 
-describe("facebookUrl", () => {
-  it("prefers a Facebook social link from the CMS", () => {
+describe("socialLinks", () => {
+  it("returns every CMS channel that has a url, in editor order", () => {
     const info = makeInfo({
-      socialMedias: [{ type: "Facebook", url: "https://facebook.com/x" }],
+      socialMedias: [
+        { type: "Facebook", url: "https://facebook.com/x" },
+        { type: "LinkedIn", url: "https://linkedin.com/x" },
+      ],
     });
-    expect(facebookUrl(info)).toBe("https://facebook.com/x");
+    expect(socialLinks(info)).toEqual([
+      { type: "Facebook", url: "https://facebook.com/x" },
+      { type: "LinkedIn", url: "https://linkedin.com/x" },
+    ]);
   });
 
-  it("falls back when there is no Facebook entry", () => {
+  it("surfaces a non-Facebook channel instead of forcing the Facebook fallback", () => {
     const info = makeInfo({
       socialMedias: [{ type: "LinkedIn", url: "https://linkedin.com/x" }],
     });
-    expect(facebookUrl(info)).toBe("https://www.facebook.com/betongogmaskin/");
+    expect(socialLinks(info)).toEqual([
+      { type: "LinkedIn", url: "https://linkedin.com/x" },
+    ]);
+  });
+
+  it("drops entries missing a url", () => {
+    const info = makeInfo({
+      socialMedias: [
+        { type: "Facebook", url: "https://facebook.com/x" },
+        { type: "Twitter", url: null },
+      ],
+    });
+    expect(socialLinks(info)).toEqual([
+      { type: "Facebook", url: "https://facebook.com/x" },
+    ]);
+  });
+
+  it("falls back to the locked Facebook link when socialMedias is null or empty", () => {
+    expect(socialLinks(null)).toEqual([
+      { type: "Facebook", url: "https://www.facebook.com/betongogmaskin/" },
+    ]);
+    expect(socialLinks(makeInfo({ socialMedias: [] }))).toEqual([
+      { type: "Facebook", url: "https://www.facebook.com/betongogmaskin/" },
+    ]);
   });
 });
 

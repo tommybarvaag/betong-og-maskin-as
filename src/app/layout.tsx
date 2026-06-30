@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Oswald, Archivo, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { SITE_URL } from "@/lib/site";
 
 // Variable fonts exposed as CSS vars, mapped in globals.css @theme to font-display / font-sans / font-mono.
 const oswald = Oswald({ subsets: ["latin"], variable: "--font-oswald" });
@@ -14,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 // Root layout is REQUIRED in the App Router (route-group layouts don't replace it).
 // Provides <html lang="nb"> / <body> and the single global stylesheet import.
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.betongogmaskin.no"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Betong & Maskin AS",
     template: "%s · Betong & Maskin AS",

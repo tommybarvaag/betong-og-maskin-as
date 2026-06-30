@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { SITE_ROUTES } from "@/lib/site-routes";
 import { loadSitemapMeta } from "@/sanity/lib/load";
+import { SITE_URL } from "@/lib/site";
 
-const BASE = "https://www.betongogmaskin.no";
+const BASE = SITE_URL;
 
 // Latest of a set of ISO-8601 timestamps (lexicographic compare is valid for ISO-8601).
 function latest(...dates: (string | null)[]): string | undefined {

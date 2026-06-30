@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import Script from "next/script";
 import { Send, Check } from "lucide-react";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form-nextjs";
+import type { AnyFieldApi } from "@tanstack/react-form";
 import { submitContact } from "@/app/actions/contact";
 import { contactFormOpts, type ContactFormResult } from "@/lib/contact-schema";
 import { Input } from "./ui/input";
@@ -27,6 +28,65 @@ const initialResult: ContactFormResult = {
 
 function RequiredMark() {
   return <span className="text-primary">*</span>;
+}
+
+type ContactFieldProps = {
+  // AnyFieldApi is TanStack Form's type for reusable field-render components — the concrete
+  // per-field generics are erased here, which is the documented pattern for this extraction.
+  field: AnyFieldApi;
+  label: string;
+  placeholder: string;
+  multiline?: boolean;
+  type?: string;
+};
+
+function ContactField({
+  field,
+  label,
+  placeholder,
+  multiline,
+  type,
+}: ContactFieldProps) {
+  const error = field.state.meta.errors[0];
+  const showError = field.state.meta.isTouched && !field.state.meta.isValid;
+
+  return (
+    <Field invalid={showError}>
+      <FieldLabel htmlFor={field.name}>
+        {label} <RequiredMark />
+      </FieldLabel>
+      {multiline ? (
+        <Textarea
+          id={field.name}
+          name={field.name}
+          rows={5}
+          placeholder={placeholder}
+          value={field.state.value}
+          onChange={(event) => field.handleChange(event.target.value)}
+          onBlur={field.handleBlur}
+          aria-invalid={showError || undefined}
+        />
+      ) : (
+        <Input
+          id={field.name}
+          name={field.name}
+          type={type}
+          placeholder={placeholder}
+          value={field.state.value}
+          onChange={(event) => field.handleChange(event.target.value)}
+          onBlur={field.handleBlur}
+          aria-invalid={showError || undefined}
+        />
+      )}
+      <FieldError>
+        {showError
+          ? typeof error === "string"
+            ? error
+            : error?.message
+          : null}
+      </FieldError>
+    </Field>
+  );
 }
 
 // Dark surface panel wrapping the real contact backend (submitContact server action → Resend).
@@ -111,105 +171,33 @@ export function ContactForm({
           <FieldLegend className="sr-only">Kontaktskjema</FieldLegend>
           <FieldGroup>
             <form.Field name="name">
-              {(field) => {
-                const error = field.state.meta.errors[0];
-                const showError =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-
-                return (
-                  <Field invalid={showError}>
-                    <FieldLabel htmlFor={field.name}>
-                      Fornavn og etternavn <RequiredMark />
-                    </FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      placeholder="Ola Nordmann"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
-                      onBlur={field.handleBlur}
-                      aria-invalid={showError || undefined}
-                    />
-                    <FieldError>
-                      {showError
-                        ? typeof error === "string"
-                          ? error
-                          : error?.message
-                        : null}
-                    </FieldError>
-                  </Field>
-                );
-              }}
+              {(field) => (
+                <ContactField
+                  field={field}
+                  label="Fornavn og etternavn"
+                  placeholder="Ola Nordmann"
+                />
+              )}
             </form.Field>
             <form.Field name="email">
-              {(field) => {
-                const error = field.state.meta.errors[0];
-                const showError =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-
-                return (
-                  <Field invalid={showError}>
-                    <FieldLabel htmlFor={field.name}>
-                      E-post <RequiredMark />
-                    </FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="email"
-                      placeholder="din@epost.no"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
-                      onBlur={field.handleBlur}
-                      aria-invalid={showError || undefined}
-                    />
-                    <FieldError>
-                      {showError
-                        ? typeof error === "string"
-                          ? error
-                          : error?.message
-                        : null}
-                    </FieldError>
-                  </Field>
-                );
-              }}
+              {(field) => (
+                <ContactField
+                  field={field}
+                  label="E-post"
+                  type="email"
+                  placeholder="din@epost.no"
+                />
+              )}
             </form.Field>
             <form.Field name="text">
-              {(field) => {
-                const error = field.state.meta.errors[0];
-                const showError =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-
-                return (
-                  <Field invalid={showError}>
-                    <FieldLabel htmlFor={field.name}>
-                      Tekst <RequiredMark />
-                    </FieldLabel>
-                    <Textarea
-                      id={field.name}
-                      name={field.name}
-                      rows={5}
-                      placeholder="Fortell kort om prosjektet ditt…"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
-                      }
-                      onBlur={field.handleBlur}
-                      aria-invalid={showError || undefined}
-                    />
-                    <FieldError>
-                      {showError
-                        ? typeof error === "string"
-                          ? error
-                          : error?.message
-                        : null}
-                    </FieldError>
-                  </Field>
-                );
-              }}
+              {(field) => (
+                <ContactField
+                  field={field}
+                  label="Tekst"
+                  placeholder="Fortell kort om prosjektet ditt…"
+                  multiline
+                />
+              )}
             </form.Field>
             {/* Honeypot — hidden from users, must stay empty. Captured by FormData, gated server-side. */}
             <input

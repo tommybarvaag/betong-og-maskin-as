@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { Logo } from "./Logo";
 import { KickerLabel } from "./KickerLabel";
-import { FacebookIcon } from "./icons";
+import { SOCIAL_ICONS } from "./icons";
 import { NAV_LINKS } from "@/lib/site-nav";
 import {
   companyName,
@@ -12,10 +12,19 @@ import {
   emailAddress,
   addressLine1,
   addressLine2,
-  facebookUrl,
+  socialLinks,
   orgNumber,
   type Info,
+  type SocialChannel,
 } from "@/lib/company";
+
+// Display labels for the social row (Twitter shows its X rename, matching the CMS dropdown title).
+const SOCIAL_LABELS: Record<SocialChannel, string> = {
+  Facebook: "Facebook",
+  Twitter: "Twitter / X",
+  LinkedIn: "LinkedIn",
+  GitHub: "GitHub",
+};
 
 // `new Date()` is an "unstable value" under Cache Components prerendering — isolate it in a
 // 'use cache' boundary (refreshes on rebuild / publish-revalidate; fine for a copyright year).
@@ -84,19 +93,26 @@ export function Footer({ info }: { info: Info }) {
             <KickerLabel className="mb-[18px] text-[11px]">
               FØLG OSS
             </KickerLabel>
-            <a
-              href={facebookUrl(info)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:border-primary/50 hover:text-primary inline-flex h-11 items-center gap-2.5 rounded-lg border border-white/15 px-4 text-[15px] font-medium transition-colors"
-            >
-              <FacebookIcon className="size-[17px]" />
-              Facebook
-            </a>
+            <div className="flex flex-wrap gap-2.5">
+              {socialLinks(info).map((link) => {
+                const Icon = SOCIAL_ICONS[link.type.toLowerCase()];
+
+                return (
+                  <a
+                    key={link.type}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:border-primary/50 hover:text-primary inline-flex h-11 items-center gap-2.5 rounded-lg border border-white/15 px-4 text-[15px] font-medium transition-colors"
+                  >
+                    {Icon ? <Icon className="size-[17px]" /> : null}
+                    {SOCIAL_LABELS[link.type]}
+                  </a>
+                );
+              })}
+            </div>
             <div className="text-faint mt-[22px] font-mono text-[11px] leading-[1.9] tracking-[1.5px]">
               ORG.NR {orgNumber(info)}
-              <br />
-              <span className="text-[#4d5667]">(oppdater org.nr)</span>
             </div>
           </div>
         </div>

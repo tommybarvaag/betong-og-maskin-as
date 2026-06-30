@@ -67,8 +67,10 @@ export default async function TjenesterPage() {
                     {service.description}
                   </p>
                   <div className="flex flex-wrap gap-2.5">
-                    {(service.subServices ?? []).map((chip) => (
-                      <ServiceChip key={chip}>{chip}</ServiceChip>
+                    {(service.subServices ?? []).map((chip, chipIndex) => (
+                      <ServiceChip key={`${service._id}-${chip}-${chipIndex}`}>
+                        {chip}
+                      </ServiceChip>
                     ))}
                   </div>
                 </div>

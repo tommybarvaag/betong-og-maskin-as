@@ -93,10 +93,23 @@ export function mapsUrl(info: Info): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
-export function facebookUrl(info: Info): string {
-  const fromCms = (info?.socialMedias ?? []).find(
-    (s) => s.type?.toLowerCase() === "facebook" && s.url,
-  )?.url;
+// Channel kind comes straight from the generated schema enum so it can't drift from typegen.
+export type SocialChannel = NonNullable<
+  NonNullable<NonNullable<Info>["socialMedias"]>[number]["type"]
+>;
 
-  return fromCms ?? FALLBACK.facebook;
+export type SocialLink = { type: SocialChannel; url: string };
+
+// All CMS social channels with a url, in editor order. Falls back to the locked Facebook link
+// when the singleton has no usable entry, so the footer + JSON-LD always show at least Facebook.
+export function socialLinks(info: Info): SocialLink[] {
+  const fromCms = (info?.socialMedias ?? []).filter((s): s is SocialLink =>
+    Boolean(s.type && s.url),
+  );
+
+  if (fromCms.length > 0) {
+    return fromCms;
+  }
+
+  return [{ type: "Facebook", url: FALLBACK.facebook }];
 }
