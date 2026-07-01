@@ -1,6 +1,9 @@
 import "server-only";
 import { draftMode, cookies } from "next/headers";
-import { resolvePerspectiveFromCookies } from "next-sanity/live";
+import {
+  resolvePerspectiveFromCookies,
+  type LivePerspective,
+} from "next-sanity/live";
 import { sanityFetch } from "./live";
 import {
   LAYOUT_QUERY,
@@ -11,36 +14,34 @@ import {
   SITEMAP_QUERY,
 } from "./queries";
 
-// Resolve the per-request perspective OUTSIDE any 'use cache' boundary (cookies() can't be read
-// inside one). Returns null for anonymous traffic (→ the cached published path).
-async function draftPerspective() {
+// Resolve the per-request perspective OUTSIDE any 'use cache' boundary — cookies()/draftMode()
+// can't be read inside one. Anonymous traffic → "published" (the prerenderable path).
+async function requestPerspective(): Promise<LivePerspective> {
   const { isEnabled } = await draftMode();
 
-  if (!isEnabled) return null;
+  if (!isEnabled) return "published";
 
   return resolvePerspectiveFromCookies({ cookies: await cookies() });
 }
 
-// Draft-aware loader: stega-tagged live data in draft mode, else the cached published path. The
-// branded query string flows through the generic so next-sanity keeps inferring the result type.
+// Draft-aware loader. Perspective is resolved OUTSIDE the cache boundary (draftMode()/cookies()
+// are illegal inside 'use cache') then passed in as a cache-key arg. Published path is cached;
+// draft mode bypasses 'use cache' (re-runs every request, stores nothing), so there the arg only
+// keeps sanityFetch's cacheTag()/cacheLife() inside a valid scope (they throw outside one under
+// cacheComponents). <SanityLive> revalidates published cache tags and refreshes draft on edits.
 async function loadDoc<const Q extends string>(query: Q) {
-  const perspective = await draftPerspective();
+  const perspective = await requestPerspective();
 
-  if (perspective) {
-    const { data } = await sanityFetch({ query, perspective, stega: true });
-    return data;
-  }
-
-  return cachedDoc(query);
+  return cachedDoc(query, perspective, perspective !== "published");
 }
 
-async function cachedDoc<const Q extends string>(query: Q) {
+async function cachedDoc<const Q extends string>(
+  query: Q,
+  perspective: LivePerspective = "published",
+  stega = false,
+) {
   "use cache";
-  const { data } = await sanityFetch({
-    query,
-    perspective: "published",
-    stega: false,
-  });
+  const { data } = await sanityFetch({ query, perspective, stega });
 
   return data;
 }

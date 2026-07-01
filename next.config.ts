@@ -8,17 +8,21 @@ import { sanity } from "next-sanity/live/cache-life";
 // 'unsafe-inline' covers the JSON-LD inline script + styled-components <style> (Studio);
 // 'unsafe-eval' covers the Studio runtime. challenges.cloudflare.com = Turnstile widget+iframe.
 // *.sanity.io / cdn.sanity.io = content API, images, draft-mode EventSource. next/font self-hosts.
+// core.sanity-cdn.com = visual-editing bridge.js (loaded in Studio + the previewed iframe);
+// sanity-cdn.com = auto-updating Studio module loader (ES modules → both script-src + connect-src).
+// public.sanity.io + avatars.githubusercontent.com + lh3.googleusercontent.com = Studio user avatars
+// (Sanity system user + GitHub/Google login avatars, served as raw provider URLs, not proxied).
 const cspReportOnly = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'self'",
   "form-action 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://core.sanity-cdn.com https://sanity-cdn.com",
   "style-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
-  "img-src 'self' data: blob: https://cdn.sanity.io",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://public.sanity.io https://avatars.githubusercontent.com https://lh3.googleusercontent.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.sanity.io wss://*.api.sanity.io https://challenges.cloudflare.com",
+  "connect-src 'self' https://*.sanity.io wss://*.api.sanity.io https://challenges.cloudflare.com https://core.sanity-cdn.com https://sanity-cdn.com",
   "frame-src 'self' https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
 ].join("; ");

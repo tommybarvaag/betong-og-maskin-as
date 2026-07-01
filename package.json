@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@11.0.8",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=24.0.0"
   },
   "type": "module",
   "scripts": {
@@ -49,12 +49,12 @@
   "devDependencies": {
     "@sanity/vision": "6.2.0",
     "@tailwindcss/postcss": "4.3.2",
-    "@types/node": "^22.13.0",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "knip": "^6.23.0",
-    "oxlint": "1.71.0",
-    "prettier": "3.9.3",
+    "oxlint": "1.72.0",
+    "prettier": "3.9.4",
     "prettier-plugin-tailwindcss": "0.8.0",
     "tailwindcss": "4.3.2",
     "typescript": "5.9.3",
