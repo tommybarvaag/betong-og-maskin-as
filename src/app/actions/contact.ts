@@ -44,10 +44,31 @@ function successResult(message: string): ContactFormResult {
   return { formState: {}, outcome: { status: "success", message } };
 }
 
+// Turnstile must be configured on Vercel production/preview and any non-Vercel
+// production runtime. Local dev and CI may run tokenless without the secret.
+function isTurnstileRequired(): boolean {
+  const vercelEnv = process.env.VERCEL_ENV;
+
+  if (vercelEnv === "production" || vercelEnv === "preview") {
+    return true;
+  }
+
+  // Non-Vercel production runtime (e.g. NODE_ENV=production without VERCEL_ENV)
+  if (process.env.NODE_ENV === "production" && !vercelEnv) {
+    return true;
+  }
+
+  return false;
+}
+
 export async function submitContact(
   _prev: ContactFormResult,
   formData: FormData,
 ): Promise<ContactFormResult> {
+  // Tracks whether verifyTurnstile was called with a non-empty token (spent it).
+  // Declared outside try so the outer catch can pass resetTurnstile correctly.
+  let turnstileSpent = false;
+
   try {
     const ip =
       (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -59,9 +80,9 @@ export async function submitContact(
 
     // Honeypot — pretend success, never reveal the trap. Read raw (it is not a
     // validated field) so bots short-circuit before validation and send.
-    const company = formData.get("company");
+    const honeypot = formData.get("website_url_hp");
 
-    if (typeof company === "string" && company.length > 0) {
+    if (typeof honeypot === "string" && honeypot.length > 0) {
       return successResult("Takk for din henvendelse!");
     }
 
@@ -84,19 +105,37 @@ export async function submitContact(
       throw e;
     }
 
-    // Run the Turnstile gate only when configured server-side. In dev/CI without
-    // the secret the form works tokenless; in prod a missing/failed token fails closed.
-    if (process.env.TURNSTILE_SECRET_KEY) {
-      const token = formData.get("cf-turnstile-response");
-      const verified =
-        typeof token === "string" && token.length > 0
-          ? await verifyTurnstile(token, ip)
-          : false;
+    // Production-like deploys require Turnstile. Missing secret fails closed with
+    // GENERIC_ERROR (misconfig). Dev/CI without secret stays tokenless. When the
+    // secret is set, missing/failed token fails closed with the verify message.
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+    const turnstileRequired = isTurnstileRequired();
 
-      if (!verified) {
+    if (turnstileRequired && !turnstileSecret) {
+      console.error(
+        "Contact form misconfigured: TURNSTILE_SECRET_KEY missing in a production-like environment.",
+      );
+
+      return errorResult(GENERIC_ERROR, false);
+    }
+
+    if (turnstileSecret) {
+      const token = formData.get("cf-turnstile-response");
+
+      if (typeof token === "string" && token.length > 0) {
+        turnstileSpent = true;
+        const verified = await verifyTurnstile(token, ip);
+
+        if (!verified) {
+          return errorResult(
+            "Verifisering feilet. Last siden på nytt og prøv igjen.",
+            true, // verify consumed the token — re-arm the widget
+          );
+        }
+      } else {
         return errorResult(
           "Verifisering feilet. Last siden på nytt og prøv igjen.",
-          true, // verify consumed the token — re-arm the widget
+          false,
         );
       }
     }
@@ -110,7 +149,8 @@ export async function submitContact(
       console.error(
         "Contact form misconfigured: missing Resend env vars (RESEND_API_KEY/RESEND_FROM/CONTACT_TO).",
       );
-      return errorResult(GENERIC_ERROR, true);
+
+      return errorResult(GENERIC_ERROR, turnstileSpent);
     }
 
     const resend = new Resend(apiKey);
@@ -124,7 +164,7 @@ export async function submitContact(
     });
 
     if (error) {
-      return errorResult(GENERIC_ERROR, true);
+      return errorResult(GENERIC_ERROR, turnstileSpent);
     }
 
     return successResult("Takk! Vi tar kontakt så snart som mulig.");
@@ -132,6 +172,6 @@ export async function submitContact(
     // Last line of defense: submitContact must never throw out to the client.
     console.error("Unexpected error in submitContact:", err);
 
-    return errorResult(GENERIC_ERROR);
+    return errorResult(GENERIC_ERROR, turnstileSpent);
   }
 }

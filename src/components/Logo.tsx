@@ -11,7 +11,6 @@ export function Logo({ className }: { className?: string }) {
       alt="Betong & Maskin AS"
       width={211}
       height={38}
-      priority
       unoptimized
       className={cn("h-[30px] w-auto", className)}
     />

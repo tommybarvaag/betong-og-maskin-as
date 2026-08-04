@@ -49,7 +49,7 @@ type FormFields = {
   name?: string;
   email?: string;
   text?: string;
-  company?: string;
+  honeypot?: string;
   token?: string;
 };
 
@@ -62,7 +62,8 @@ function buildForm(fields: FormFields): FormData {
 
   if (fields.text !== undefined) fd.append("text", fields.text);
 
-  if (fields.company !== undefined) fd.append("company", fields.company);
+  if (fields.honeypot !== undefined)
+    fd.append("website_url_hp", fields.honeypot);
 
   if (fields.token !== undefined) {
     fd.append("cf-turnstile-response", fields.token);
@@ -84,12 +85,12 @@ describe("submitContact", () => {
     vi.clearAllMocks();
   });
 
-  it("honeypot: a non-empty company short-circuits to success without sending", async () => {
+  it("honeypot: a non-empty website_url_hp short-circuits to success without sending", async () => {
     currentIp = "10.0.0.1";
     setEnv();
     const result = await submitContact(
       initial,
-      buildForm({ ...validInput, company: "spam-bot" }),
+      buildForm({ ...validInput, honeypot: "spam-bot" }),
     );
 
     expect(result.outcome.status).toBe("success");
@@ -229,6 +230,27 @@ describe("submitContact", () => {
     }
   });
 
+  it("Resend error after Turnstile verify: resetTurnstile is true", async () => {
+    currentIp = "10.0.0.10";
+    setEnv();
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    verifyTurnstile.mockResolvedValueOnce(true);
+    send.mockResolvedValueOnce({ error: { message: "boom" } });
+    const result = await submitContact(
+      initial,
+      buildForm({ ...validInput, token: "tok" }),
+    );
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Kunne ikke sende meldingen. Prøv igjen senere.",
+      );
+      expect(result.outcome.resetTurnstile).toBe(true);
+    }
+  });
+
   it("Resend send throws: the outer catch returns the generic error (never throws out)", async () => {
     currentIp = "10.0.0.8";
     setEnv();
@@ -242,5 +264,95 @@ describe("submitContact", () => {
         "Kunne ikke sende meldingen. Prøv igjen senere.",
       );
     }
+  });
+
+  it("Resend throw after Turnstile verify: outer catch sets resetTurnstile true", async () => {
+    currentIp = "10.0.0.11";
+    setEnv();
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    verifyTurnstile.mockResolvedValueOnce(true);
+    send.mockRejectedValueOnce(new Error("network down"));
+    const result = await submitContact(
+      initial,
+      buildForm({ ...validInput, token: "tok" }),
+    );
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Kunne ikke sende meldingen. Prøv igjen senere.",
+      );
+      expect(result.outcome.resetTurnstile).toBe(true);
+    }
+  });
+
+  it("Turnstile secret set, no token: verify error, no send, resetTurnstile false", async () => {
+    currentIp = "10.0.0.12";
+    setEnv();
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    const result = await submitContact(initial, buildForm(validInput));
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Verifisering feilet. Last siden på nytt og prøv igjen.",
+      );
+      expect(result.outcome.resetTurnstile).toBe(false);
+    }
+
+    expect(verifyTurnstile).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("VERCEL_ENV=production, no Turnstile secret: generic error, no send", async () => {
+    currentIp = "10.0.0.13";
+    setEnv();
+    vi.stubEnv("VERCEL_ENV", "production");
+    const result = await submitContact(initial, buildForm(validInput));
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Kunne ikke sende meldingen. Prøv igjen senere.",
+      );
+    }
+
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("VERCEL_ENV=preview, no Turnstile secret: generic error, no send", async () => {
+    currentIp = "10.0.0.14";
+    setEnv();
+    vi.stubEnv("VERCEL_ENV", "preview");
+    const result = await submitContact(initial, buildForm(validInput));
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Kunne ikke sende meldingen. Prøv igjen senere.",
+      );
+    }
+
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("VERCEL_ENV=production, secret set, good token: succeeds and sends", async () => {
+    currentIp = "10.0.0.15";
+    setEnv();
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    verifyTurnstile.mockResolvedValueOnce(true);
+    send.mockResolvedValueOnce({ error: null });
+    const result = await submitContact(
+      initial,
+      buildForm({ ...validInput, token: "tok" }),
+    );
+
+    expect(result.outcome.status).toBe("success");
+    expect(send).toHaveBeenCalledTimes(1);
   });
 });

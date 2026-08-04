@@ -4,7 +4,7 @@ Marketing site for a Norwegian concrete/machine contractor. Next.js 16.3 (App Ro
 
 ## Prerequisites
 
-- Node `>=22.13.0` (CI pins `22.13.0`)
+- Node `>=24.0.0` (see `engines` in `package.json`; `.nvmrc` and CI use 24)
 - pnpm `11.0.8` (see `packageManager` in `package.json`)
 
 ## Setup
