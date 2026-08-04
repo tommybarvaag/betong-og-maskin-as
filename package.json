@@ -17,7 +17,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "typegen": "sanity schema extract && sanity typegen generate",
+    "typegen": "sanity schema extract --force && sanity typegen generate",
     "test": "vitest run",
     "knip": "knip"
   },
