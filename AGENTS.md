@@ -4,7 +4,10 @@
 - Comments: weigh every word. Keep the non-obvious "why"; cut anything the code or tests already show.
 - Never use emojis. Emojis are not allowed.
 - Always add air around if statements and air above return statements. This is a convention in our codebase to improve readability.
-- use kebab-case for file and directory names. Use PascalCase for component names. Use camelCase for variable and function names.
+- Directories: kebab-case
+- Component modules under src/components/: PascalCase filenames (ContactForm.tsx)
+- Non-component modules: kebab-case (contact-schema.ts)
+- Variables/functions camelCase; components PascalCase
 
 # Code style
 
@@ -28,7 +31,10 @@ You are an expert in TypeScript, Node.js, Next.js App Router, React, Base UI, Zo
 
 # Naming Conventions
 
-- Use lowercase with dashes for directories (e.g., components/auth-wizard).
+- Directories: kebab-case (e.g., components/auth-wizard).
+- Component modules under src/components/: PascalCase filenames (ContactForm.tsx)
+- Non-component modules: kebab-case (contact-schema.ts)
+- Variables/functions camelCase; components PascalCase
 - Favor named exports for components.
 
 # TypeScript Usage
@@ -46,19 +52,21 @@ You are an expert in TypeScript, Node.js, Next.js App Router, React, Base UI, Zo
 
 # UI and Styling
 
-- Use our internal ui package if possible, it uses shadcn/ui with Base UI, and Tailwind for components and styling.
+- Use src/components/ui/* (shadcn + Base UI + Tailwind). Prefer existing primitives.
 - Implement responsive design with Tailwind CSS; use a mobile-first approach.
 
 # Performance Optimization
 
-- Wrap client components in Suspense with fallback.
-- Use dynamic loading for non-critical components.
-- Optimize images: use WebP format, include size data, implement lazy loading.
+- Prefer Server Components by default
+- "use client" only when needed
+- next/dynamic for heavy client-only (Studio pattern src/app/studio/[[...tool]]/Studio.tsx)
+- Images: sizes; priority/fetchPriority only for true LCP hero, not chrome logos
 
 # Key Conventions
 
-- Optimize Web Vitals (LCP, CLS, FID).
+- Optimize Core Web Vitals (LCP, CLS, INP).
 - Follow Next.js docs for Data Fetching, Rendering, and Routing.
+- Preview Next + Cache Components: read docs/adr/0001-preview-next-stack.md before changing Studio loading, load.ts, or next.config.ts cache flags.
 
 # Verification Before Done
 
