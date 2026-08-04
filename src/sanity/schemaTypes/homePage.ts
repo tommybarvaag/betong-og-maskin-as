@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { HomeIcon } from "@sanity/icons";
+import { HomeIcon } from "@sanity/icons/Home";
 
 // Singleton (fixed _id 'homePage') for the Forside. Pillar cards come from serviceCategory; the
 // rest of the copy lives here. Every field is optional — the frontend falls back to the locked

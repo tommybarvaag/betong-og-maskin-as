@@ -49,6 +49,8 @@ export default async function OmOssPage() {
             image={page.image}
             label="BILDE: JOAR / TEAMET"
             aspect="4 / 3"
+            loading="eager"
+            fetchPriority="high"
           />
           <div className="grid grid-cols-2 gap-4">
             {statCards.map((card) => (

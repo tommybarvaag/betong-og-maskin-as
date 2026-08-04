@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { WrenchIcon } from "@sanity/icons";
+import { WrenchIcon } from "@sanity/icons/Wrench";
 
 // Service. `slug` is retained but UNUSED for routing (services render only as home-page cards;
 // see decision: no /tjenester/[slug] route). The legacy `tjenester/`-prefix slugify + the

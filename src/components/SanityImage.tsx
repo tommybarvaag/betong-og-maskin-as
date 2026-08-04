@@ -8,7 +8,8 @@ type Props = {
   height: number;
   className?: string;
   sizes?: string;
-  priority?: boolean;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
 };
 
 // Builds a next/image from a Sanity image object (cdn.sanity.io is allow-listed in next.config).
@@ -18,7 +19,8 @@ export function SanityImage({
   height,
   className,
   sizes,
-  priority,
+  loading,
+  fetchPriority,
 }: Props) {
   if (!image?.asset) return null;
 
@@ -31,7 +33,8 @@ export function SanityImage({
       width={width}
       height={height}
       sizes={sizes}
-      priority={priority}
+      loading={loading}
+      fetchPriority={fetchPriority}
       className={className}
     />
   );

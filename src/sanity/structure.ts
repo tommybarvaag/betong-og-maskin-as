@@ -1,13 +1,11 @@
 import type { StructureResolver } from "sanity/structure";
-import {
-  HomeIcon,
-  WrenchIcon,
-  UsersIcon,
-  EnvelopeIcon,
-  CaseIcon,
-  ThLargeIcon,
-  ArchiveIcon,
-} from "@sanity/icons";
+import { HomeIcon } from "@sanity/icons/Home";
+import { WrenchIcon } from "@sanity/icons/Wrench";
+import { UsersIcon } from "@sanity/icons/Users";
+import { EnvelopeIcon } from "@sanity/icons/Envelope";
+import { CaseIcon } from "@sanity/icons/Case";
+import { ThLargeIcon } from "@sanity/icons/ThLarge";
+import { ArchiveIcon } from "@sanity/icons/Archive";
 
 // Single editor for a fixed-id singleton.
 const singleton = (

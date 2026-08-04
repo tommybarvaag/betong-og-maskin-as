@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { WrenchIcon } from "@sanity/icons";
+import { WrenchIcon } from "@sanity/icons/Wrench";
 
 // Singleton (fixed _id 'tjenesterPage'). The service blocks come from serviceCategory; this
 // holds the page hero and the closing CTA band.

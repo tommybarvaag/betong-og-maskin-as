@@ -16,11 +16,15 @@ export function MediaTile({
   label,
   aspect = "4 / 3",
   className,
+  loading,
+  fetchPriority,
 }: {
   image?: MainImage | null;
   label: string;
   aspect?: string;
   className?: string;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
 }) {
   if (!image?.asset) {
     return (
@@ -43,6 +47,8 @@ export function MediaTile({
         width={width}
         height={height}
         sizes="(max-width: 900px) 100vw, 600px"
+        loading={loading}
+        fetchPriority={fetchPriority}
         className="h-full w-full object-cover"
       />
     </div>
