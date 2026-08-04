@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { CaseIcon } from "@sanity/icons";
+import { CaseIcon } from "@sanity/icons/Case";
 
 // Singleton (one fixed _id 'companyInfo'); singleton behaviour enforced in structure + config.
 export const companyInfo = defineType({

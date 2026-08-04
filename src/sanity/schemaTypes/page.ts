@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { DocumentIcon } from "@sanity/icons";
+import { DocumentIcon } from "@sanity/icons/Document";
 
 // MULTI-DOCUMENT type (NOT a singleton): three fixed _ids — 'home' / 'about' / 'contact' —
 // pinned in the structure. The frontend queries pages by _id. Hero is `image`, parallax is

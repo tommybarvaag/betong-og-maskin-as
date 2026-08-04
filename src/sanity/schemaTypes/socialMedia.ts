@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { ShareIcon } from "@sanity/icons";
+import { ShareIcon } from "@sanity/icons/Share";
 
 // Enum VALUES kept identical to the legacy schema (Facebook/Twitter/LinkedIn/GitHub) so
 // existing companyInfo.socialMedias[].type values aren't orphaned. Dropped `liveEdit:true`

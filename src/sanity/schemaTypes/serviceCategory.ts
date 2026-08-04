@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { WrenchIcon } from "@sanity/icons";
+import { WrenchIcon } from "@sanity/icons/Wrench";
 
 // A fagområde (Støping / Muring / Graving). Drives the home pillars, the /tjenester blocks, and
 // (via subServices) the /om-oss service list. `icon` values must stay in sync with the lucide

@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { UsersIcon } from "@sanity/icons";
+import { UsersIcon } from "@sanity/icons/Users";
 
 // Singleton (fixed _id 'omOssPage'). The services list is derived from serviceCategory
 // subServices; this holds the hero, founder story, stat cards, quote and CTA copy.

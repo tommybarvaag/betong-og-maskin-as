@@ -1,5 +1,5 @@
 import { defineType, defineField } from "sanity";
-import { EnvelopeIcon } from "@sanity/icons";
+import { EnvelopeIcon } from "@sanity/icons/Envelope";
 
 // Singleton (fixed _id 'kontaktPage'). Contact methods + foretaksopplysninger render from
 // companyInfo; this holds the hero and the form heading/description.

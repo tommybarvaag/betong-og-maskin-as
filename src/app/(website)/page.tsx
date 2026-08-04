@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
 import { ContactMethodCard } from "@/components/ContactMethodCard";
+import { GalleryLightbox } from "@/components/GalleryLightbox";
 import { KickerLabel } from "@/components/KickerLabel";
 import { NoiseOverlay } from "@/components/NoiseOverlay";
 import { PillarCard } from "@/components/PillarCard";
@@ -18,18 +20,9 @@ import { cn } from "@/lib/utils";
 import { urlForImage } from "@/sanity/lib/image";
 import { loadHome, loadLayout } from "@/sanity/lib/load";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const GalleryLightbox = dynamic(() =>
-  import("@/components/GalleryLightbox").then((m) => m.GalleryLightbox),
-);
-
-const ContactForm = dynamic(() =>
-  import("@/components/ContactForm").then((m) => m.ContactForm),
-);
 
 // Default hero photo per HANDOFF (the existing project image on the Sanity CDN). A CMS
 // homePage.heroImage overrides it; this is a visual asset, not page copy.
@@ -67,7 +60,7 @@ export default async function HomePage() {
           src={heroSrc}
           alt="Betong og maskinarbeid på Radøy"
           fill
-          priority
+          loading="eager"
           fetchPriority="high"
           sizes="100vw"
           className="object-cover"
