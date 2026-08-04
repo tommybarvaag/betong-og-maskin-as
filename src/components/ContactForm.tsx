@@ -267,10 +267,10 @@ export function ContactForm({
                 />
               )}
             </form.Field>
-            {/* Honeypot — hidden from users, must stay empty. Captured by FormData, gated server-side. */}
+            {/* Honeypot — hidden from users, must stay empty. Captured by FormData, gated server-side. name intentionally non-standard to avoid autofill. */}
             <input
               type="text"
-              name="company"
+              name="website_url_hp"
               tabIndex={-1}
               autoComplete="off"
               className="hidden"

@@ -63,9 +63,9 @@ export async function submitContact(
 
     // Honeypot — pretend success, never reveal the trap. Read raw (it is not a
     // validated field) so bots short-circuit before validation and send.
-    const company = formData.get("company");
+    const honeypot = formData.get("website_url_hp");
 
-    if (typeof company === "string" && company.length > 0) {
+    if (typeof honeypot === "string" && honeypot.length > 0) {
       return successResult("Takk for din henvendelse!");
     }
 

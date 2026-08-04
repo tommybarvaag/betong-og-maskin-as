@@ -49,7 +49,7 @@ type FormFields = {
   name?: string;
   email?: string;
   text?: string;
-  company?: string;
+  honeypot?: string;
   token?: string;
 };
 
@@ -62,7 +62,8 @@ function buildForm(fields: FormFields): FormData {
 
   if (fields.text !== undefined) fd.append("text", fields.text);
 
-  if (fields.company !== undefined) fd.append("company", fields.company);
+  if (fields.honeypot !== undefined)
+    fd.append("website_url_hp", fields.honeypot);
 
   if (fields.token !== undefined) {
     fd.append("cf-turnstile-response", fields.token);
@@ -84,12 +85,12 @@ describe("submitContact", () => {
     vi.clearAllMocks();
   });
 
-  it("honeypot: a non-empty company short-circuits to success without sending", async () => {
+  it("honeypot: a non-empty website_url_hp short-circuits to success without sending", async () => {
     currentIp = "10.0.0.1";
     setEnv();
     const result = await submitContact(
       initial,
-      buildForm({ ...validInput, company: "spam-bot" }),
+      buildForm({ ...validInput, honeypot: "spam-bot" }),
     );
 
     expect(result.outcome.status).toBe("success");
