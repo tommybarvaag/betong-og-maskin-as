@@ -229,6 +229,27 @@ describe("submitContact", () => {
     }
   });
 
+  it("Resend error after Turnstile verify: resetTurnstile is true", async () => {
+    currentIp = "10.0.0.10";
+    setEnv();
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    verifyTurnstile.mockResolvedValueOnce(true);
+    send.mockResolvedValueOnce({ error: { message: "boom" } });
+    const result = await submitContact(
+      initial,
+      buildForm({ ...validInput, token: "tok" }),
+    );
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Kunne ikke sende meldingen. Prøv igjen senere.",
+      );
+      expect(result.outcome.resetTurnstile).toBe(true);
+    }
+  });
+
   it("Resend send throws: the outer catch returns the generic error (never throws out)", async () => {
     currentIp = "10.0.0.8";
     setEnv();
@@ -242,5 +263,45 @@ describe("submitContact", () => {
         "Kunne ikke sende meldingen. Prøv igjen senere.",
       );
     }
+  });
+
+  it("Resend throw after Turnstile verify: outer catch sets resetTurnstile true", async () => {
+    currentIp = "10.0.0.11";
+    setEnv();
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    verifyTurnstile.mockResolvedValueOnce(true);
+    send.mockRejectedValueOnce(new Error("network down"));
+    const result = await submitContact(
+      initial,
+      buildForm({ ...validInput, token: "tok" }),
+    );
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Kunne ikke sende meldingen. Prøv igjen senere.",
+      );
+      expect(result.outcome.resetTurnstile).toBe(true);
+    }
+  });
+
+  it("Turnstile secret set, no token: verify error, no send, resetTurnstile false", async () => {
+    currentIp = "10.0.0.12";
+    setEnv();
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "ts_secret");
+    const result = await submitContact(initial, buildForm(validInput));
+
+    expect(result.outcome.status).toBe("error");
+
+    if (result.outcome.status === "error") {
+      expect(result.outcome.message).toBe(
+        "Verifisering feilet. Last siden på nytt og prøv igjen.",
+      );
+      expect(result.outcome.resetTurnstile).toBe(false);
+    }
+
+    expect(verifyTurnstile).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
   });
 });

@@ -48,6 +48,10 @@ export async function submitContact(
   _prev: ContactFormResult,
   formData: FormData,
 ): Promise<ContactFormResult> {
+  // Tracks whether verifyTurnstile was called with a non-empty token (spent it).
+  // Declared outside try so the outer catch can pass resetTurnstile correctly.
+  let turnstileSpent = false;
+
   try {
     const ip =
       (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -88,15 +92,21 @@ export async function submitContact(
     // the secret the form works tokenless; in prod a missing/failed token fails closed.
     if (process.env.TURNSTILE_SECRET_KEY) {
       const token = formData.get("cf-turnstile-response");
-      const verified =
-        typeof token === "string" && token.length > 0
-          ? await verifyTurnstile(token, ip)
-          : false;
 
-      if (!verified) {
+      if (typeof token === "string" && token.length > 0) {
+        turnstileSpent = true;
+        const verified = await verifyTurnstile(token, ip);
+
+        if (!verified) {
+          return errorResult(
+            "Verifisering feilet. Last siden på nytt og prøv igjen.",
+            true, // verify consumed the token — re-arm the widget
+          );
+        }
+      } else {
         return errorResult(
           "Verifisering feilet. Last siden på nytt og prøv igjen.",
-          true, // verify consumed the token — re-arm the widget
+          false,
         );
       }
     }
@@ -110,7 +120,8 @@ export async function submitContact(
       console.error(
         "Contact form misconfigured: missing Resend env vars (RESEND_API_KEY/RESEND_FROM/CONTACT_TO).",
       );
-      return errorResult(GENERIC_ERROR, true);
+
+      return errorResult(GENERIC_ERROR, turnstileSpent);
     }
 
     const resend = new Resend(apiKey);
@@ -124,7 +135,7 @@ export async function submitContact(
     });
 
     if (error) {
-      return errorResult(GENERIC_ERROR, true);
+      return errorResult(GENERIC_ERROR, turnstileSpent);
     }
 
     return successResult("Takk! Vi tar kontakt så snart som mulig.");
@@ -132,6 +143,6 @@ export async function submitContact(
     // Last line of defense: submitContact must never throw out to the client.
     console.error("Unexpected error in submitContact:", err);
 
-    return errorResult(GENERIC_ERROR);
+    return errorResult(GENERIC_ERROR, turnstileSpent);
   }
 }

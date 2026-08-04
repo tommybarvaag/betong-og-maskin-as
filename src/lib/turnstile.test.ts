@@ -33,4 +33,24 @@ describe("verifyTurnstile", () => {
     );
     expect(await verifyTurnstile("token")).toBe(false);
   });
+
+  it("returns false when fetch rejects", async () => {
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "secret");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("network down");
+      }),
+    );
+    expect(await verifyTurnstile("token")).toBe(false);
+  });
+
+  it("returns false when response body is non-JSON", async () => {
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "secret");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("not-json", { status: 200 })),
+    );
+    expect(await verifyTurnstile("token")).toBe(false);
+  });
 });

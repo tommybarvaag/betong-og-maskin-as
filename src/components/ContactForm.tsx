@@ -7,7 +7,13 @@ import type { AnyFieldApi } from "@tanstack/react-form";
 import { mergeForm, useForm, useTransform } from "@tanstack/react-form-nextjs";
 import { Check, Send } from "lucide-react";
 import Script from "next/script";
-import { useActionState, useEffect, useState } from "react";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "./ui/button";
 import {
   Field,
@@ -25,6 +31,20 @@ const initialResult: ContactFormResult = {
   formState: {},
   outcome: { status: "idle" },
 };
+
+// Minimal typing for Cloudflare Turnstile's explicit JS API (api.js).
+type TurnstileApi = {
+  render: (
+    el: HTMLElement,
+    opts: { sitekey: string; theme?: "dark" | "light" },
+  ) => string;
+  reset: (widgetId: string) => void;
+  remove?: (widgetId: string) => void;
+};
+
+function getTurnstile(): TurnstileApi | undefined {
+  return (window as unknown as { turnstile?: TurnstileApi }).turnstile;
+}
 
 function RequiredMark() {
   return <span className="text-primary">*</span>;
@@ -108,10 +128,9 @@ export function ContactForm({
     initialResult,
   );
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  // Bumped on every error to remount the Turnstile widget so it re-arms with a fresh token —
-  // the previous one is spent once verified.
-  const [widgetKey, setWidgetKey] = useState(0);
   const [isActivated, setIsActivated] = useState(false);
+  const widgetRef = useRef<HTMLDivElement | null>(null);
+  const widgetId = useRef<string | null>(null);
 
   const form = useForm({
     ...contactFormOpts,
@@ -121,13 +140,53 @@ export function ContactForm({
     ),
   });
 
-  // Re-arm Turnstile only when the verify spent the token; a still-valid token
-  // (field error, rate-limit) survives so the visitor needn't re-solve.
+  const mountWidget = useCallback(() => {
+    if (!siteKey || !widgetRef.current || !getTurnstile()) {
+      return;
+    }
+
+    if (widgetId.current) {
+      return;
+    }
+
+    widgetId.current = getTurnstile()!.render(widgetRef.current, {
+      sitekey: siteKey,
+      theme: "dark",
+    });
+  }, [siteKey]);
+
+  // Script may already be cached when isActivated flips — mount if ready.
+  useEffect(() => {
+    if (isActivated && siteKey) {
+      mountWidget();
+    }
+  }, [isActivated, siteKey, mountWidget]);
+
+  // Re-arm via explicit reset when verify spent the token; field/rate-limit
+  // errors leave a still-valid token alone.
   useEffect(() => {
     if (result.outcome.status === "error" && result.outcome.resetTurnstile) {
-      setWidgetKey((k) => k + 1);
+      const id = widgetId.current;
+      const api = getTurnstile();
+
+      if (id && api) {
+        api.reset(id);
+      }
     }
   }, [result]);
+
+  useEffect(() => {
+    return () => {
+      const id = widgetId.current;
+      const api = getTurnstile();
+
+      if (id && api?.remove) {
+        api.remove(id);
+      }
+
+      widgetId.current = null;
+    };
+  }, []);
 
   const panel = cn(
     "rounded-2xl border border-line bg-surface p-[clamp(24px,3vw,36px)]",
@@ -167,6 +226,7 @@ export function ContactForm({
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
           async
           defer
+          onLoad={mountWidget}
         />
       ) : null}
       <form
@@ -216,14 +276,7 @@ export function ContactForm({
               className="hidden"
               aria-hidden="true"
             />
-            {isActivated && siteKey ? (
-              <div
-                key={widgetKey}
-                className="cf-turnstile"
-                data-theme="dark"
-                data-sitekey={siteKey}
-              />
-            ) : null}
+            {isActivated && siteKey ? <div ref={widgetRef} /> : null}
             {result.outcome.status === "error" ? (
               <p role="alert" className="text-destructive text-sm">
                 {result.outcome.message}
