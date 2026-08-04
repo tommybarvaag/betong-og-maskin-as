@@ -44,6 +44,23 @@ function successResult(message: string): ContactFormResult {
   return { formState: {}, outcome: { status: "success", message } };
 }
 
+// Turnstile must be configured on Vercel production/preview and any non-Vercel
+// production runtime. Local dev and CI may run tokenless without the secret.
+function isTurnstileRequired(): boolean {
+  const vercelEnv = process.env.VERCEL_ENV;
+
+  if (vercelEnv === "production" || vercelEnv === "preview") {
+    return true;
+  }
+
+  // Non-Vercel production runtime (e.g. NODE_ENV=production without VERCEL_ENV)
+  if (process.env.NODE_ENV === "production" && !vercelEnv) {
+    return true;
+  }
+
+  return false;
+}
+
 export async function submitContact(
   _prev: ContactFormResult,
   formData: FormData,
@@ -88,9 +105,21 @@ export async function submitContact(
       throw e;
     }
 
-    // Run the Turnstile gate only when configured server-side. In dev/CI without
-    // the secret the form works tokenless; in prod a missing/failed token fails closed.
-    if (process.env.TURNSTILE_SECRET_KEY) {
+    // Production-like deploys require Turnstile. Missing secret fails closed with
+    // GENERIC_ERROR (misconfig). Dev/CI without secret stays tokenless. When the
+    // secret is set, missing/failed token fails closed with the verify message.
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+    const turnstileRequired = isTurnstileRequired();
+
+    if (turnstileRequired && !turnstileSecret) {
+      console.error(
+        "Contact form misconfigured: TURNSTILE_SECRET_KEY missing in a production-like environment.",
+      );
+
+      return errorResult(GENERIC_ERROR, false);
+    }
+
+    if (turnstileSecret) {
       const token = formData.get("cf-turnstile-response");
 
       if (typeof token === "string" && token.length > 0) {
